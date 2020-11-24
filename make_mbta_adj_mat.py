@@ -1,6 +1,7 @@
 import requests
 from urllib.parse import quote
-import numpy
+import numpy as np
+import pandas as pd
 import json
 import time
 
@@ -51,31 +52,57 @@ def generate_route_json():
 	with open("mbta_trips", "w") as f:
 		json.dump(trip_stop_dict, f)
 
-def remap_keys(mapping):
-     return {str(k) : v for k, v in mapping.items()}
+def dedup_trips():
+	with open("mbta_trips", "r") as f:
+		trip_stop_dict = json.load(f)
+		deduped_trip_stop_dict = {}
+		for i in range(len(trip_stop_dict)):
+			trip_id = list(trip_stop_dict.keys())[i]
+			if len(deduped_trip_stop_dict) == 0:
+				deduped_trip_stop_dict[(trip_id)] = trip_stop_dict[trip_id]
+				continue
+			was_duplicate = False
+			for j in range(len(deduped_trip_stop_dict)):
+				existing_trip_ids = list(deduped_trip_stop_dict.keys())[j]
+				if deduped_trip_stop_dict[existing_trip_ids] == trip_stop_dict[trip_id]:
+					deduped_trip_stop_dict[(existing_trip_ids, trip_id)] = trip_stop_dict[trip_id]
+					deduped_trip_stop_dict.pop(existing_trip_ids)
+					was_duplicate = True
+					break
+			if not was_duplicate:
+				deduped_trip_stop_dict[(trip_id)] = trip_stop_dict[trip_id]
+		
+		with open("mbta_trips_deduped", "w") as f2:
+			json.dump({str(k) : v for k, v in deduped_trip_stop_dict.items()}, f2)
 
-with open("mbta_trips", "r") as f:
+
+all_places = []
+trip_stop_dict = None
+with open("mbta_trips_deduped", "r") as f:
 	trip_stop_dict = json.load(f)
-	deduped_trip_stop_dict = {}
-	for i in range(len(trip_stop_dict)):
-		trip_id = list(trip_stop_dict.keys())[i]
-		if len(deduped_trip_stop_dict) == 0:
-			deduped_trip_stop_dict[(trip_id)] = trip_stop_dict[trip_id]
-			continue
-		was_duplicate = False
-		for j in range(len(deduped_trip_stop_dict)):
-			existing_trip_ids = list(deduped_trip_stop_dict.keys())[j]
-			if deduped_trip_stop_dict[existing_trip_ids] == trip_stop_dict[trip_id]:
-				deduped_trip_stop_dict[(existing_trip_ids, trip_id)] = trip_stop_dict[trip_id]
-				deduped_trip_stop_dict.pop(existing_trip_ids)
-				was_duplicate = True
-				break
-		if not was_duplicate:
-			deduped_trip_stop_dict[(trip_id)] = trip_stop_dict[trip_id]
-	
-	with open("mbta_trips_deduped", "w") as f2:
-		json.dump(remap_keys(deduped_trip_stop_dict), f2)
-			
-		
+	for k, v in trip_stop_dict.items():
+		for place in v:
+			all_places.append(place[0])
+	all_places = np.unique(np.array(all_places))
+	# Verified by hand that this gets all 118 subway stations :sweat_smile:
 
-		
+adjacency_mat = np.zeros((len(all_places), len(all_places))).astype('int')
+df = pd.DataFrame(adjacency_mat, columns=all_places, index=all_places)
+
+for route_ids, route in trip_stop_dict.items():
+	for i in range(len(route)):
+		place_id = route[i][0]
+		if i != len(route) - 1:
+			next_place_id = route[i + 1][0]
+			df[place_id][next_place_id] = 1
+			df[next_place_id][place_id] = 1
+		if i != 0:
+			prev_place_id = route[i - 1][0]
+			df[place_id][prev_place_id] = 1
+			df[prev_place_id][place_id] = 1
+print(df)
+
+with open("mbta_adj_mat", "w") as f:
+	df.to_json(f)
+
+			

@@ -1,0 +1,1622 @@
+{
+  "('45295219', '45295220')": [
+    [
+      "place-alfcl",
+      "Alewife"
+    ],
+    [
+      "place-davis",
+      "Davis"
+    ],
+    [
+      "place-portr",
+      "Porter"
+    ],
+    [
+      "place-harsq",
+      "Harvard"
+    ],
+    [
+      "place-cntsq",
+      "Central"
+    ],
+    [
+      "place-knncl",
+      "Kendall/MIT"
+    ],
+    [
+      "place-chmnl",
+      "Charles/MGH"
+    ],
+    [
+      "place-pktrm",
+      "Park Street"
+    ],
+    [
+      "place-dwnxg",
+      "Downtown Crossing"
+    ],
+    [
+      "place-sstat",
+      "South Station"
+    ],
+    [
+      "place-brdwy",
+      "Broadway"
+    ],
+    [
+      "place-andrw",
+      "Andrew"
+    ],
+    [
+      "place-jfk",
+      "JFK/UMass"
+    ],
+    [
+      "place-shmnl",
+      "Savin Hill"
+    ],
+    [
+      "place-fldcr",
+      "Fields Corner"
+    ],
+    [
+      "place-smmnl",
+      "Shawmut"
+    ],
+    [
+      "place-asmnl",
+      "Ashmont"
+    ]
+  ],
+  "('45295375', '45295355')": [
+    [
+      "place-alfcl",
+      "Alewife"
+    ],
+    [
+      "place-davis",
+      "Davis"
+    ],
+    [
+      "place-portr",
+      "Porter"
+    ],
+    [
+      "place-harsq",
+      "Harvard"
+    ],
+    [
+      "place-cntsq",
+      "Central"
+    ],
+    [
+      "place-knncl",
+      "Kendall/MIT"
+    ],
+    [
+      "place-chmnl",
+      "Charles/MGH"
+    ],
+    [
+      "place-pktrm",
+      "Park Street"
+    ],
+    [
+      "place-dwnxg",
+      "Downtown Crossing"
+    ],
+    [
+      "place-sstat",
+      "South Station"
+    ],
+    [
+      "place-brdwy",
+      "Broadway"
+    ],
+    [
+      "place-andrw",
+      "Andrew"
+    ],
+    [
+      "place-jfk",
+      "JFK/UMass"
+    ],
+    [
+      "place-nqncy",
+      "North Quincy"
+    ],
+    [
+      "place-wlsta",
+      "Wollaston"
+    ],
+    [
+      "place-qnctr",
+      "Quincy Center"
+    ],
+    [
+      "place-qamnl",
+      "Quincy Adams"
+    ],
+    [
+      "place-brntn",
+      "Braintree"
+    ]
+  ],
+  "('45616687', '45616685')": [
+    [
+      "place-asmnl",
+      "Ashmont"
+    ],
+    [
+      "place-cedgr",
+      "Cedar Grove"
+    ],
+    [
+      "place-butlr",
+      "Butler"
+    ],
+    [
+      "place-miltt",
+      "Milton"
+    ],
+    [
+      "place-cenav",
+      "Central Avenue"
+    ],
+    [
+      "place-valrd",
+      "Valley Road"
+    ],
+    [
+      "place-capst",
+      "Capen Street"
+    ],
+    [
+      "place-matt",
+      "Mattapan"
+    ]
+  ],
+  "('45616433-20:45-CCWellShuttTrain1', '45616558-20:45-CCWellShuttTrain1')": [
+    [
+      "place-ccmnl",
+      "Community College"
+    ],
+    [
+      "place-sull",
+      "Sullivan Square"
+    ],
+    [
+      "place-welln",
+      "Wellington"
+    ],
+    [
+      "place-astao",
+      "Assembly"
+    ]
+  ],
+  "('45324958', '45324956')": [
+    [
+      "place-forhl",
+      "Forest Hills"
+    ],
+    [
+      "place-grnst",
+      "Green Street"
+    ],
+    [
+      "place-sbmnl",
+      "Stony Brook"
+    ],
+    [
+      "place-jaksn",
+      "Jackson Square"
+    ],
+    [
+      "place-rcmnl",
+      "Roxbury Crossing"
+    ],
+    [
+      "place-rugg",
+      "Ruggles"
+    ],
+    [
+      "place-masta",
+      "Massachusetts Avenue"
+    ],
+    [
+      "place-bbsta",
+      "Back Bay"
+    ],
+    [
+      "place-tumnl",
+      "Tufts Medical Center"
+    ],
+    [
+      "place-chncl",
+      "Chinatown"
+    ],
+    [
+      "place-dwnxg",
+      "Downtown Crossing"
+    ],
+    [
+      "place-state",
+      "State"
+    ],
+    [
+      "place-haecl",
+      "Haymarket"
+    ],
+    [
+      "place-north",
+      "North Station"
+    ],
+    [
+      "place-ccmnl",
+      "Community College"
+    ],
+    [
+      "place-sull",
+      "Sullivan Square"
+    ],
+    [
+      "place-welln",
+      "Wellington"
+    ],
+    [
+      "place-mlmnl",
+      "Malden Center"
+    ],
+    [
+      "place-ogmnl",
+      "Oak Grove"
+    ],
+    [
+      "place-astao",
+      "Assembly"
+    ]
+  ],
+  "('45616433-20:45-CCWellShuttTrain2', '45616558-20:45-CCWellShuttTrain0')": [
+    [
+      "place-forhl",
+      "Forest Hills"
+    ],
+    [
+      "place-grnst",
+      "Green Street"
+    ],
+    [
+      "place-sbmnl",
+      "Stony Brook"
+    ],
+    [
+      "place-jaksn",
+      "Jackson Square"
+    ],
+    [
+      "place-rcmnl",
+      "Roxbury Crossing"
+    ],
+    [
+      "place-rugg",
+      "Ruggles"
+    ],
+    [
+      "place-masta",
+      "Massachusetts Avenue"
+    ],
+    [
+      "place-bbsta",
+      "Back Bay"
+    ],
+    [
+      "place-tumnl",
+      "Tufts Medical Center"
+    ],
+    [
+      "place-chncl",
+      "Chinatown"
+    ],
+    [
+      "place-dwnxg",
+      "Downtown Crossing"
+    ],
+    [
+      "place-state",
+      "State"
+    ],
+    [
+      "place-haecl",
+      "Haymarket"
+    ],
+    [
+      "place-north",
+      "North Station"
+    ],
+    [
+      "place-ccmnl",
+      "Community College"
+    ]
+  ],
+  "('45616433-20:45-CCWellShuttTrain0', '45616558-20:45-CCWellShuttTrain2')": [
+    [
+      "place-welln",
+      "Wellington"
+    ],
+    [
+      "place-mlmnl",
+      "Malden Center"
+    ],
+    [
+      "place-ogmnl",
+      "Oak Grove"
+    ]
+  ],
+  "45616588": [
+    [
+      "place-forhl",
+      "Forest Hills"
+    ],
+    [
+      "place-grnst",
+      "Green Street"
+    ],
+    [
+      "place-sbmnl",
+      "Stony Brook"
+    ],
+    [
+      "place-jaksn",
+      "Jackson Square"
+    ],
+    [
+      "place-rcmnl",
+      "Roxbury Crossing"
+    ],
+    [
+      "place-rugg",
+      "Ruggles"
+    ],
+    [
+      "place-masta",
+      "Massachusetts Avenue"
+    ],
+    [
+      "place-bbsta",
+      "Back Bay"
+    ],
+    [
+      "place-tumnl",
+      "Tufts Medical Center"
+    ],
+    [
+      "place-chncl",
+      "Chinatown"
+    ],
+    [
+      "place-dwnxg",
+      "Downtown Crossing"
+    ],
+    [
+      "place-state",
+      "State"
+    ],
+    [
+      "place-haecl",
+      "Haymarket"
+    ],
+    [
+      "place-north",
+      "North Station"
+    ],
+    [
+      "place-ccmnl",
+      "Community College"
+    ],
+    [
+      "place-sull",
+      "Sullivan Square"
+    ],
+    [
+      "place-welln",
+      "Wellington"
+    ],
+    [
+      "place-astao",
+      "Assembly"
+    ]
+  ],
+  "('45811028', '45811027')": [
+    [
+      "place-lake",
+      "Boston College"
+    ],
+    [
+      "place-sougr",
+      "South Street"
+    ],
+    [
+      "place-chill",
+      "Chestnut Hill Avenue"
+    ],
+    [
+      "place-chswk",
+      "Chiswick Road"
+    ],
+    [
+      "place-sthld",
+      "Sutherland Road"
+    ],
+    [
+      "place-wascm",
+      "Washington Street"
+    ],
+    [
+      "place-wrnst",
+      "Warren Street"
+    ],
+    [
+      "place-alsgr",
+      "Allston Street"
+    ],
+    [
+      "place-grigg",
+      "Griggs Street"
+    ],
+    [
+      "place-harvd",
+      "Harvard Avenue"
+    ],
+    [
+      "place-brico",
+      "Packards Corner"
+    ],
+    [
+      "place-babck",
+      "Babcock Street"
+    ],
+    [
+      "place-plsgr",
+      "Pleasant Street"
+    ],
+    [
+      "place-stplb",
+      "Saint Paul Street"
+    ],
+    [
+      "place-buwst",
+      "Boston University West"
+    ],
+    [
+      "place-bucen",
+      "Boston University Central"
+    ],
+    [
+      "place-buest",
+      "Boston University East"
+    ],
+    [
+      "place-bland",
+      "Blandford Street"
+    ],
+    [
+      "place-kencl",
+      "Kenmore"
+    ],
+    [
+      "place-hymnl",
+      "Hynes Convention Center"
+    ],
+    [
+      "place-coecl",
+      "Copley"
+    ],
+    [
+      "place-armnl",
+      "Arlington"
+    ],
+    [
+      "place-boyls",
+      "Boylston"
+    ],
+    [
+      "place-pktrm",
+      "Park Street"
+    ],
+    [
+      "place-gover",
+      "Government Center"
+    ],
+    [
+      "place-haecl",
+      "Haymarket"
+    ],
+    [
+      "place-north",
+      "North Station"
+    ]
+  ],
+  "45811046": [
+    [
+      "place-lake",
+      "Boston College"
+    ],
+    [
+      "place-sougr",
+      "South Street"
+    ],
+    [
+      "place-chill",
+      "Chestnut Hill Avenue"
+    ],
+    [
+      "place-chswk",
+      "Chiswick Road"
+    ],
+    [
+      "place-sthld",
+      "Sutherland Road"
+    ],
+    [
+      "place-wascm",
+      "Washington Street"
+    ],
+    [
+      "place-wrnst",
+      "Warren Street"
+    ],
+    [
+      "place-alsgr",
+      "Allston Street"
+    ],
+    [
+      "place-grigg",
+      "Griggs Street"
+    ],
+    [
+      "place-harvd",
+      "Harvard Avenue"
+    ],
+    [
+      "place-brico",
+      "Packards Corner"
+    ],
+    [
+      "place-babck",
+      "Babcock Street"
+    ],
+    [
+      "place-plsgr",
+      "Pleasant Street"
+    ],
+    [
+      "place-stplb",
+      "Saint Paul Street"
+    ],
+    [
+      "place-buwst",
+      "Boston University West"
+    ],
+    [
+      "place-bucen",
+      "Boston University Central"
+    ],
+    [
+      "place-buest",
+      "Boston University East"
+    ],
+    [
+      "place-bland",
+      "Blandford Street"
+    ],
+    [
+      "place-hymnl",
+      "Hynes Convention Center"
+    ],
+    [
+      "place-coecl",
+      "Copley"
+    ],
+    [
+      "place-armnl",
+      "Arlington"
+    ],
+    [
+      "place-boyls",
+      "Boylston"
+    ],
+    [
+      "place-pktrm",
+      "Park Street"
+    ],
+    [
+      "place-kencl",
+      "Kenmore"
+    ]
+  ],
+  "45811045": [
+    [
+      "place-lake",
+      "Boston College"
+    ],
+    [
+      "place-sougr",
+      "South Street"
+    ],
+    [
+      "place-chill",
+      "Chestnut Hill Avenue"
+    ],
+    [
+      "place-chswk",
+      "Chiswick Road"
+    ],
+    [
+      "place-sthld",
+      "Sutherland Road"
+    ],
+    [
+      "place-wascm",
+      "Washington Street"
+    ],
+    [
+      "place-wrnst",
+      "Warren Street"
+    ],
+    [
+      "place-alsgr",
+      "Allston Street"
+    ],
+    [
+      "place-grigg",
+      "Griggs Street"
+    ],
+    [
+      "place-harvd",
+      "Harvard Avenue"
+    ],
+    [
+      "place-brico",
+      "Packards Corner"
+    ],
+    [
+      "place-babck",
+      "Babcock Street"
+    ],
+    [
+      "place-plsgr",
+      "Pleasant Street"
+    ],
+    [
+      "place-stplb",
+      "Saint Paul Street"
+    ],
+    [
+      "place-buwst",
+      "Boston University West"
+    ],
+    [
+      "place-bucen",
+      "Boston University Central"
+    ],
+    [
+      "place-buest",
+      "Boston University East"
+    ],
+    [
+      "place-bland",
+      "Blandford Street"
+    ],
+    [
+      "place-hymnl",
+      "Hynes Convention Center"
+    ],
+    [
+      "place-coecl",
+      "Copley"
+    ],
+    [
+      "place-armnl",
+      "Arlington"
+    ],
+    [
+      "place-boyls",
+      "Boylston"
+    ],
+    [
+      "place-kencl",
+      "Kenmore"
+    ],
+    [
+      "place-pktrm",
+      "Park Street"
+    ]
+  ],
+  "('45811030', '45811029')": [
+    [
+      "place-kencl",
+      "Kenmore"
+    ],
+    [
+      "place-hymnl",
+      "Hynes Convention Center"
+    ],
+    [
+      "place-coecl",
+      "Copley"
+    ],
+    [
+      "place-armnl",
+      "Arlington"
+    ],
+    [
+      "place-boyls",
+      "Boylston"
+    ],
+    [
+      "place-pktrm",
+      "Park Street"
+    ],
+    [
+      "place-gover",
+      "Government Center"
+    ],
+    [
+      "place-haecl",
+      "Haymarket"
+    ],
+    [
+      "place-north",
+      "North Station"
+    ],
+    [
+      "place-smary",
+      "Saint Mary's Street"
+    ],
+    [
+      "place-hwsst",
+      "Hawes Street"
+    ],
+    [
+      "place-kntst",
+      "Kent Street"
+    ],
+    [
+      "place-stpul",
+      "Saint Paul Street"
+    ],
+    [
+      "place-cool",
+      "Coolidge Corner"
+    ],
+    [
+      "place-sumav",
+      "Summit Avenue"
+    ],
+    [
+      "place-bndhl",
+      "Brandon Hall"
+    ],
+    [
+      "place-fbkst",
+      "Fairbanks Street"
+    ],
+    [
+      "place-bcnwa",
+      "Washington Square"
+    ],
+    [
+      "place-tapst",
+      "Tappan Street"
+    ],
+    [
+      "place-denrd",
+      "Dean Road"
+    ],
+    [
+      "place-engav",
+      "Englewood Avenue"
+    ],
+    [
+      "place-clmnl",
+      "Cleveland Circle"
+    ]
+  ],
+  "('45803748-20:45-NwnHiStMKnrCNwnHiStMKnrD2', '45803746-20:45-NwnHiStMKnrCNwnHiStMKnrD0')": [
+    [
+      "place-smary",
+      "Saint Mary's Street"
+    ],
+    [
+      "place-hwsst",
+      "Hawes Street"
+    ],
+    [
+      "place-kntst",
+      "Kent Street"
+    ],
+    [
+      "place-stpul",
+      "Saint Paul Street"
+    ],
+    [
+      "place-cool",
+      "Coolidge Corner"
+    ],
+    [
+      "place-sumav",
+      "Summit Avenue"
+    ],
+    [
+      "place-bndhl",
+      "Brandon Hall"
+    ],
+    [
+      "place-fbkst",
+      "Fairbanks Street"
+    ],
+    [
+      "place-bcnwa",
+      "Washington Square"
+    ],
+    [
+      "place-tapst",
+      "Tappan Street"
+    ],
+    [
+      "place-denrd",
+      "Dean Road"
+    ],
+    [
+      "place-engav",
+      "Englewood Avenue"
+    ],
+    [
+      "place-clmnl",
+      "Cleveland Circle"
+    ]
+  ],
+  "('45803757', '45803758')": [
+    [
+      "place-kencl",
+      "Kenmore"
+    ],
+    [
+      "place-hymnl",
+      "Hynes Convention Center"
+    ],
+    [
+      "place-coecl",
+      "Copley"
+    ],
+    [
+      "place-armnl",
+      "Arlington"
+    ],
+    [
+      "place-boyls",
+      "Boylston"
+    ],
+    [
+      "place-river",
+      "Riverside"
+    ],
+    [
+      "place-woodl",
+      "Woodland"
+    ],
+    [
+      "place-waban",
+      "Waban"
+    ],
+    [
+      "place-eliot",
+      "Eliot"
+    ],
+    [
+      "place-newtn",
+      "Newton Highlands"
+    ],
+    [
+      "place-newto",
+      "Newton Centre"
+    ],
+    [
+      "place-chhil",
+      "Chestnut Hill"
+    ],
+    [
+      "place-rsmnl",
+      "Reservoir"
+    ],
+    [
+      "place-bcnfd",
+      "Beaconsfield"
+    ],
+    [
+      "place-brkhl",
+      "Brookline Hills"
+    ],
+    [
+      "place-bvmnl",
+      "Brookline Village"
+    ],
+    [
+      "place-longw",
+      "Longwood"
+    ],
+    [
+      "place-fenwy",
+      "Fenway"
+    ],
+    [
+      "place-pktrm",
+      "Park Street"
+    ],
+    [
+      "place-gover",
+      "Government Center"
+    ],
+    [
+      "place-haecl",
+      "Haymarket"
+    ],
+    [
+      "place-north",
+      "North Station"
+    ]
+  ],
+  "('45811127', '45811125')": [
+    [
+      "place-kencl",
+      "Kenmore"
+    ],
+    [
+      "place-hymnl",
+      "Hynes Convention Center"
+    ],
+    [
+      "place-coecl",
+      "Copley"
+    ],
+    [
+      "place-armnl",
+      "Arlington"
+    ],
+    [
+      "place-boyls",
+      "Boylston"
+    ],
+    [
+      "place-river",
+      "Riverside"
+    ],
+    [
+      "place-woodl",
+      "Woodland"
+    ],
+    [
+      "place-waban",
+      "Waban"
+    ],
+    [
+      "place-eliot",
+      "Eliot"
+    ],
+    [
+      "place-newtn",
+      "Newton Highlands"
+    ],
+    [
+      "place-newto",
+      "Newton Centre"
+    ],
+    [
+      "place-chhil",
+      "Chestnut Hill"
+    ],
+    [
+      "place-rsmnl",
+      "Reservoir"
+    ],
+    [
+      "place-bcnfd",
+      "Beaconsfield"
+    ],
+    [
+      "place-brkhl",
+      "Brookline Hills"
+    ],
+    [
+      "place-bvmnl",
+      "Brookline Village"
+    ],
+    [
+      "place-longw",
+      "Longwood"
+    ],
+    [
+      "place-fenwy",
+      "Fenway"
+    ],
+    [
+      "place-pktrm",
+      "Park Street"
+    ],
+    [
+      "place-gover",
+      "Government Center"
+    ]
+  ],
+  "('45804940-20:45-NewtonHighlandsRiverside0', '45804948-20:45-NewtonHighlandsRiverside2')": [
+    [
+      "place-kencl",
+      "Kenmore"
+    ],
+    [
+      "place-hymnl",
+      "Hynes Convention Center"
+    ],
+    [
+      "place-coecl",
+      "Copley"
+    ],
+    [
+      "place-armnl",
+      "Arlington"
+    ],
+    [
+      "place-boyls",
+      "Boylston"
+    ],
+    [
+      "place-newtn",
+      "Newton Highlands"
+    ],
+    [
+      "place-newto",
+      "Newton Centre"
+    ],
+    [
+      "place-chhil",
+      "Chestnut Hill"
+    ],
+    [
+      "place-rsmnl",
+      "Reservoir"
+    ],
+    [
+      "place-bcnfd",
+      "Beaconsfield"
+    ],
+    [
+      "place-brkhl",
+      "Brookline Hills"
+    ],
+    [
+      "place-bvmnl",
+      "Brookline Village"
+    ],
+    [
+      "place-longw",
+      "Longwood"
+    ],
+    [
+      "place-fenwy",
+      "Fenway"
+    ],
+    [
+      "place-pktrm",
+      "Park Street"
+    ],
+    [
+      "place-gover",
+      "Government Center"
+    ]
+  ],
+  "('45804940-20:45-ReservoirRiverside0', '45804948-20:45-ReservoirRiverside2')": [
+    [
+      "place-kencl",
+      "Kenmore"
+    ],
+    [
+      "place-hymnl",
+      "Hynes Convention Center"
+    ],
+    [
+      "place-coecl",
+      "Copley"
+    ],
+    [
+      "place-armnl",
+      "Arlington"
+    ],
+    [
+      "place-boyls",
+      "Boylston"
+    ],
+    [
+      "place-rsmnl",
+      "Reservoir"
+    ],
+    [
+      "place-bcnfd",
+      "Beaconsfield"
+    ],
+    [
+      "place-brkhl",
+      "Brookline Hills"
+    ],
+    [
+      "place-bvmnl",
+      "Brookline Village"
+    ],
+    [
+      "place-longw",
+      "Longwood"
+    ],
+    [
+      "place-fenwy",
+      "Fenway"
+    ],
+    [
+      "place-pktrm",
+      "Park Street"
+    ],
+    [
+      "place-gover",
+      "Government Center"
+    ]
+  ],
+  "((('45804940-20:45-NwnHiStMKnrCNwnHiStMKnrD2', '45804940-20:45-FenwayNewtonHighlands2'), '45804948-20:45-NwnHiStMKnrCNwnHiStMKnrD0'), '45804948-20:45-FenwayNewtonHighlands0')": [
+    [
+      "place-river",
+      "Riverside"
+    ],
+    [
+      "place-woodl",
+      "Woodland"
+    ],
+    [
+      "place-waban",
+      "Waban"
+    ],
+    [
+      "place-eliot",
+      "Eliot"
+    ],
+    [
+      "place-newtn",
+      "Newton Highlands"
+    ]
+  ],
+  "('45804940-20:45-FenwayNewtonHighlands0', '45804948-20:45-FenwayNewtonHighlands2')": [
+    [
+      "place-kencl",
+      "Kenmore"
+    ],
+    [
+      "place-hymnl",
+      "Hynes Convention Center"
+    ],
+    [
+      "place-coecl",
+      "Copley"
+    ],
+    [
+      "place-armnl",
+      "Arlington"
+    ],
+    [
+      "place-boyls",
+      "Boylston"
+    ],
+    [
+      "place-fenwy",
+      "Fenway"
+    ],
+    [
+      "place-pktrm",
+      "Park Street"
+    ],
+    [
+      "place-gover",
+      "Government Center"
+    ]
+  ],
+  "('45804940-20:45-BrooklineHillsKenmore2', '45804948-20:45-BrooklineHillsKenmore0')": [
+    [
+      "place-river",
+      "Riverside"
+    ],
+    [
+      "place-woodl",
+      "Woodland"
+    ],
+    [
+      "place-waban",
+      "Waban"
+    ],
+    [
+      "place-eliot",
+      "Eliot"
+    ],
+    [
+      "place-newtn",
+      "Newton Highlands"
+    ],
+    [
+      "place-newto",
+      "Newton Centre"
+    ],
+    [
+      "place-chhil",
+      "Chestnut Hill"
+    ],
+    [
+      "place-rsmnl",
+      "Reservoir"
+    ],
+    [
+      "place-bcnfd",
+      "Beaconsfield"
+    ],
+    [
+      "place-brkhl",
+      "Brookline Hills"
+    ]
+  ],
+  "((('45804940-20:45-NwnHiStMKnrCNwnHiStMKnrD0', '45804940-20:45-BrooklineHillsKenmore0'), '45804948-20:45-NwnHiStMKnrCNwnHiStMKnrD2'), '45804948-20:45-BrooklineHillsKenmore2')": [
+    [
+      "place-kencl",
+      "Kenmore"
+    ],
+    [
+      "place-hymnl",
+      "Hynes Convention Center"
+    ],
+    [
+      "place-coecl",
+      "Copley"
+    ],
+    [
+      "place-armnl",
+      "Arlington"
+    ],
+    [
+      "place-boyls",
+      "Boylston"
+    ],
+    [
+      "place-pktrm",
+      "Park Street"
+    ],
+    [
+      "place-gover",
+      "Government Center"
+    ]
+  ],
+  "(('45803748-20:45-NwnHiStMKnrCNwnHiStMKnrD0', '45803746-20:45-NwnHiStMKnrCNwnHiStMKnrD2'), '45805609-20:45-BrooklineHillsKenmore0')": [
+    [
+      "place-kencl",
+      "Kenmore"
+    ],
+    [
+      "place-hymnl",
+      "Hynes Convention Center"
+    ],
+    [
+      "place-coecl",
+      "Copley"
+    ],
+    [
+      "place-armnl",
+      "Arlington"
+    ],
+    [
+      "place-boyls",
+      "Boylston"
+    ],
+    [
+      "place-pktrm",
+      "Park Street"
+    ],
+    [
+      "place-gover",
+      "Government Center"
+    ],
+    [
+      "place-haecl",
+      "Haymarket"
+    ],
+    [
+      "place-north",
+      "North Station"
+    ]
+  ],
+  "45805609-20:45-BrooklineHillsKenmore2": [
+    [
+      "place-rsmnl",
+      "Reservoir"
+    ],
+    [
+      "place-bcnfd",
+      "Beaconsfield"
+    ],
+    [
+      "place-brkhl",
+      "Brookline Hills"
+    ]
+  ],
+  "('45805609', '45805593')": [
+    [
+      "place-kencl",
+      "Kenmore"
+    ],
+    [
+      "place-hymnl",
+      "Hynes Convention Center"
+    ],
+    [
+      "place-coecl",
+      "Copley"
+    ],
+    [
+      "place-armnl",
+      "Arlington"
+    ],
+    [
+      "place-boyls",
+      "Boylston"
+    ],
+    [
+      "place-rsmnl",
+      "Reservoir"
+    ],
+    [
+      "place-bcnfd",
+      "Beaconsfield"
+    ],
+    [
+      "place-brkhl",
+      "Brookline Hills"
+    ],
+    [
+      "place-bvmnl",
+      "Brookline Village"
+    ],
+    [
+      "place-longw",
+      "Longwood"
+    ],
+    [
+      "place-fenwy",
+      "Fenway"
+    ],
+    [
+      "place-pktrm",
+      "Park Street"
+    ],
+    [
+      "place-gover",
+      "Government Center"
+    ],
+    [
+      "place-haecl",
+      "Haymarket"
+    ],
+    [
+      "place-north",
+      "North Station"
+    ]
+  ],
+  "('45811113', '45811116')": [
+    [
+      "place-coecl",
+      "Copley"
+    ],
+    [
+      "place-armnl",
+      "Arlington"
+    ],
+    [
+      "place-boyls",
+      "Boylston"
+    ],
+    [
+      "place-pktrm",
+      "Park Street"
+    ],
+    [
+      "place-gover",
+      "Government Center"
+    ],
+    [
+      "place-haecl",
+      "Haymarket"
+    ],
+    [
+      "place-north",
+      "North Station"
+    ],
+    [
+      "place-prmnl",
+      "Prudential"
+    ],
+    [
+      "place-symcl",
+      "Symphony"
+    ],
+    [
+      "place-nuniv",
+      "Northeastern University"
+    ],
+    [
+      "place-mfa",
+      "Museum of Fine Arts"
+    ],
+    [
+      "place-lngmd",
+      "Longwood Medical Area"
+    ],
+    [
+      "place-brmnl",
+      "Brigham Circle"
+    ],
+    [
+      "place-fenwd",
+      "Fenwood Road"
+    ],
+    [
+      "place-mispk",
+      "Mission Park"
+    ],
+    [
+      "place-rvrwy",
+      "Riverway"
+    ],
+    [
+      "place-bckhl",
+      "Back of the Hill"
+    ],
+    [
+      "place-hsmnl",
+      "Heath Street"
+    ]
+  ],
+  "45741334": [
+    [
+      "place-gover",
+      "Government Center"
+    ],
+    [
+      "place-state",
+      "State"
+    ],
+    [
+      "place-aqucl",
+      "Aquarium"
+    ],
+    [
+      "place-mvbcl",
+      "Maverick"
+    ],
+    [
+      "place-aport",
+      "Airport"
+    ],
+    [
+      "place-wimnl",
+      "Wood Island"
+    ],
+    [
+      "place-orhte",
+      "Orient Heights"
+    ],
+    [
+      "place-sdmnl",
+      "Suffolk Downs"
+    ],
+    [
+      "place-bmmnl",
+      "Beachmont"
+    ],
+    [
+      "place-rbmnl",
+      "Revere Beach"
+    ],
+    [
+      "place-wondl",
+      "Wonderland"
+    ],
+    [
+      "place-bomnl",
+      "Bowdoin"
+    ]
+  ],
+  "45741386": [
+    [
+      "place-bomnl",
+      "Bowdoin"
+    ],
+    [
+      "place-gover",
+      "Government Center"
+    ],
+    [
+      "place-state",
+      "State"
+    ],
+    [
+      "place-aqucl",
+      "Aquarium"
+    ],
+    [
+      "place-mvbcl",
+      "Maverick"
+    ],
+    [
+      "place-aport",
+      "Airport"
+    ],
+    [
+      "place-wimnl",
+      "Wood Island"
+    ],
+    [
+      "place-orhte",
+      "Orient Heights"
+    ],
+    [
+      "place-sdmnl",
+      "Suffolk Downs"
+    ],
+    [
+      "place-bmmnl",
+      "Beachmont"
+    ],
+    [
+      "place-rbmnl",
+      "Revere Beach"
+    ],
+    [
+      "place-wondl",
+      "Wonderland"
+    ]
+  ],
+  "45741560": [
+    [
+      "place-gover",
+      "Government Center"
+    ],
+    [
+      "place-state",
+      "State"
+    ],
+    [
+      "place-aqucl",
+      "Aquarium"
+    ],
+    [
+      "place-mvbcl",
+      "Maverick"
+    ],
+    [
+      "place-aport",
+      "Airport"
+    ],
+    [
+      "place-wimnl",
+      "Wood Island"
+    ],
+    [
+      "place-orhte",
+      "Orient Heights"
+    ],
+    [
+      "place-bomnl",
+      "Bowdoin"
+    ]
+  ]
+}

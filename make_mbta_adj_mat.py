@@ -218,6 +218,7 @@ for stop in stop_stats:
 	if stop[0] not in pi:
 		pi[stop[0]] = 0
 	pi[stop[0]] += stop[1]
+
 for stop in pi.keys():
 	pi[stop] /= total_riders
 print(pi)

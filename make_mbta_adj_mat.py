@@ -105,6 +105,13 @@ def generate_adj_matrix(use_readable_station_names=False, write_to_file=True, fi
 				df[place_id][prev_place_id] = 1
 				df[prev_place_id][place_id] = 1
 
+	# TEMPORARILY HACK TO AVOID MATTAPAN TROLLEY
+	if not use_readable_station_names:
+		df = df.drop(['place-butlr', 'place-capst', 'place-cedgr', 'place-cenav', 'place-matt', 'place-miltt', 'place-valrd'], axis=0)
+		df = df.drop(['place-butlr', 'place-capst', 'place-cedgr', 'place-cenav', 'place-matt', 'place-miltt', 'place-valrd'], axis=1)
+	else:
+		pass
+
 	if write_to_file:
 		if filename is None:
 			filename = "mbta_adj_mat"
@@ -196,11 +203,6 @@ def waels_code():
 	    p = np.matmul(X,p)
 	print(p)
 	print(np.linalg.norm(p-pi,1))
-				
-
-
-		
-				
 
 
 # line and stop data from https://mbta-massdot.opendata.arcgis.com/datasets/mbta-rail-ridership-by-time-period-season-route-line-and-stop
@@ -215,11 +217,13 @@ def func(row):
 	return (row["stop_id"], row["total_ons"])
 stop_stats = fall_2019_line_data.apply(func, axis=1)
 for stop in stop_stats:
+	if stop[0] == "place-lech" or stop[0] == "place-spmnl":
+		continue
 	if stop[0] not in pi:
 		pi[stop[0]] = 0
 	pi[stop[0]] += stop[1]
 
 for stop in pi.keys():
 	pi[stop] /= total_riders
-print(pi)
+
 

@@ -115,88 +115,106 @@ def generate_adj_matrix(use_readable_station_names=False, write_to_file=True, fi
 	return df
 
 
-M = generate_adj_matrix(write_to_file=False).to_numpy()
+def waels_code():
+	M = generate_adj_matrix(write_to_file=False).to_numpy()
 
-N = 300 # assumed total number of trains in the system
-n = M.shape[0]
-pi = [1/n]*n + np.random.random(n)/N
-pi = pi/sum(pi) # made-up target stationary distribution
+	N = 300 # assumed total number of trains in the system
+	n = M.shape[0]
+	pi = [1/n]*n + np.random.random(n)/N
+	pi = pi/sum(pi) # made-up target stationary distribution
 
-Mp = M # modified adjacency so that the Markov chain is ergodic
-d = np.sum(Mp,axis=1)
-print('degree:', d)
-print('\n #nonzero entries:', np.sum(d))
+	Mp = M # modified adjacency so that the Markov chain is ergodic
+	d = np.sum(Mp,axis=1)
+	print('degree:', d)
+	print('\n #nonzero entries:', np.sum(d))
 
-boundary = np.argwhere(d==1).flatten()
-for b in boundary:
-    Mp[b,b] = 1
-d = np.sum(Mp,axis=1)
-print('\n modified degrees', d)
+	boundary = np.argwhere(d==1).flatten()
+	for b in boundary:
+	    Mp[b,b] = 1
+	d = np.sum(Mp,axis=1)
+	print('\n modified degrees', d)
 
-w_supp = np.argwhere(Mp!=0)
-n_w = len(w_supp)
+	w_supp = np.argwhere(Mp!=0)
+	n_w = len(w_supp)
 
-T = [[i,j] for i,j in itertools.product(range(n),range(n)) if Mp[i,j] != 0] # the coordinates we care about (~ 300 out of ~ 140k)
+	T = [[i,j] for i,j in itertools.product(range(n),range(n)) if Mp[i,j] != 0] # the coordinates we care about (~ 300 out of ~ 140k)
 
-TI = [] # neighbor list
-q = 0
-for i in range(n):
-    TI.append([T[k][1] for k in range(q,q+d[i])])
-    q += d[i]
+	TI = [] # neighbor list
+	q = 0
+	for i in range(n):
+	    TI.append([T[k][1] for k in range(q,q+d[i])])
+	    q += d[i]
 
-print(TI)
+	print(TI)
 
-TI_lengths = [0]
-q = 0
-for t in TI:
-    q += len(t)
-    TI_lengths.append(q)
+	TI_lengths = [0]
+	q = 0
+	for t in TI:
+	    q += len(t)
+	    TI_lengths.append(q)
 
-B_pi = np.zeros((n,n_w))
-for i in range(n):
-    B_pi[i,TI_lengths[i]:TI_lengths[i+1]] = [pi[j] for j in TI[i]]
+	B_pi = np.zeros((n,n_w))
+	for i in range(n):
+	    B_pi[i,TI_lengths[i]:TI_lengths[i+1]] = [pi[j] for j in TI[i]]
 
-B_1 = np.zeros((n,n_w))
-for j in range(n):
-    I = np.array(TI[j])
-    for i in I:
-        B_1[j,TI_lengths[i]+np.argwhere(np.array(TI[i])==j)[0,0]] = 1
+	B_1 = np.zeros((n,n_w))
+	for j in range(n):
+	    I = np.array(TI[j])
+	    for i in I:
+	        B_1[j,TI_lengths[i]+np.argwhere(np.array(TI[i])==j)[0,0]] = 1
 
-zeta = 1
-B = np.vstack([B_pi,zeta*B_1])
-c = np.hstack([pi,zeta*np.ones(n)])
-LB = (1/N)*np.ones(n_w)
+	zeta = 1
+	B = np.vstack([B_pi,zeta*B_1])
+	c = np.hstack([pi,zeta*np.ones(n)])
+	LB = (1/N)*np.ones(n_w)
 
-x2 = lsq_linear(B, c, bounds=(LB, np.inf), # solution
-                method='trf', tol=1e-10, lsq_solver=None, lsmr_tol=None, 
-                max_iter=None, verbose=0).x
+	x2 = lsq_linear(B, c, bounds=(LB, np.inf), # solution
+	                method='trf', tol=1e-10, lsq_solver=None, lsmr_tol=None, 
+	                max_iter=None, verbose=0).x
 
-print((np.matmul(B,x2) - c)/c)
+	print((np.matmul(B,x2) - c)/c)
 
-def weight(i,j,x,TI,TI_lengths):
-    t = np.argwhere(np.array(TI[i]) == j).flatten()
-    if len(t):
-        return x[TI_lengths[i]+t[0]]
-    return 0
+	def weight(i,j,x,TI,TI_lengths):
+	    t = np.argwhere(np.array(TI[i]) == j).flatten()
+	    if len(t):
+	        return x[TI_lengths[i]+t[0]]
+	    return 0
 
-print('e.g.', weight(0,116,x2,TI,TI_lengths))
+	print('e.g.', weight(0,116,x2,TI,TI_lengths))
 
-for i in range(n):
-    print(sum(x2[TI_lengths[i]:TI_lengths[i+1]]))
+	for i in range(n):
+	    print(sum(x2[TI_lengths[i]:TI_lengths[i+1]]))
 
-X = np.zeros((n,n))
-for i,j in itertools.product(range(n),range(n)):
-    X[i,j] = weight(i,j,x2,TI,TI_lengths)
+	X = np.zeros((n,n))
+	for i,j in itertools.product(range(n),range(n)):
+	    X[i,j] = weight(i,j,x2,TI,TI_lengths)
 
-p0 = np.array([1]+[0]*(n-1)).reshape(n,)
-p = p0
-t = 20000
-for i in range(t):
-    p = np.matmul(X,p)
-print(p)
-print(np.linalg.norm(p-pi,1))
-			
+	p0 = np.array([1]+[0]*(n-1)).reshape(n,)
+	p = p0
+	t = 20000
+	for i in range(t):
+	    p = np.matmul(X,p)
+	print(p)
+	print(np.linalg.norm(p-pi,1))
+				
 
 
-	
-			
+		
+				
+
+
+# line and stop data from https://mbta-massdot.opendata.arcgis.com/datasets/mbta-rail-ridership-by-time-period-season-route-line-and-stop
+# Let's pick Fall 2019 PM_PEAK data
+line_data = pd.read_csv("MBTA data.csv")
+fall_2019_line_data = line_data.loc[(line_data["season"] == "Fall 2019") & (line_data["time_period_name"] == "PM_PEAK")]
+pi = {}
+total_riders = 0
+def func(row):
+	global total_riders
+	total_riders += row["total_ons"]
+	return (row["stop_name"], row["total_ons"])
+stop_stats = fall_2019_line_data.apply(func, axis=1)
+for stop in stop_stats:
+	pi[stop[0]] = stop[1] / total_riders
+print(pi)
+

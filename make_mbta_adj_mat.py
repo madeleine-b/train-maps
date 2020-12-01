@@ -212,9 +212,13 @@ total_riders = 0
 def func(row):
 	global total_riders
 	total_riders += row["total_ons"]
-	return (row["stop_name"], row["total_ons"])
+	return (row["stop_id"], row["total_ons"])
 stop_stats = fall_2019_line_data.apply(func, axis=1)
 for stop in stop_stats:
-	pi[stop[0]] = stop[1] / total_riders
+	if stop[0] not in pi:
+		pi[stop[0]] = 0
+	pi[stop[0]] += stop[1]
+for stop in pi.keys():
+	pi[stop] /= total_riders
 print(pi)
 

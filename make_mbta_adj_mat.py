@@ -8,6 +8,9 @@ import time
 import itertools
 from scipy.optimize import lsq_linear
 
+import networkx as nx 
+import matplotlib.pyplot as plt
+
 def generate_route_json():
 	s = requests.Session()
 	s.headers.update({'accept': 'application/vnd.api+json'})
@@ -210,9 +213,13 @@ def waels_code():
 line_data = pd.read_csv("MBTA data.csv")
 fall_2019_line_data = line_data.loc[(line_data["season"] == "Fall 2019") & (line_data["time_period_name"] == "PM_PEAK")]
 pi = {}
+stop_id_to_name = {}
 total_riders = 0
 def func(row):
 	global total_riders
+	global stop_id_to_name
+	if row["stop_id"] not in stop_id_to_name:
+		stop_id_to_name[row["stop_id"]] = row["stop_name"]
 	total_riders += row["total_ons"]
 	return (row["stop_id"], row["total_ons"])
 stop_stats = fall_2019_line_data.apply(func, axis=1)
@@ -226,8 +233,17 @@ for stop in stop_stats:
 for stop in pi.keys():
 	pi[stop] /= total_riders
 
+
 adj_mat_df = generate_adj_matrix(write_to_file=False)
-pi = np.array([pi[stop] for stop in iter(adj_mat_df.columns)])
+adj_mat_df_cols = list(adj_mat_df.columns)
+pi = np.array([pi[stop] for stop in adj_mat_df_cols])
 adj_mat = adj_mat_df.to_numpy()
+
+G = nx.from_numpy_matrix(np.array(adj_mat))  
+label_dict = {}
+for stop_index in range(len(adj_mat_df_cols)):
+	label_dict[stop_index] = stop_id_to_name[adj_mat_df_cols[stop_index]]
+nx.draw(G, labels=label_dict, font_size=8) 
+plt.show()
 
 

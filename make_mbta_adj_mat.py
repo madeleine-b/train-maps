@@ -53,6 +53,7 @@ MBTA_SUBWAY_IDS = ['place-alfcl', 'place-alsgr', 'place-andrw', 'place-aport', '
 				   'place-tapst', 'place-tumnl', 'place-waban', 'place-wascm', 'place-welln', 'place-wimnl', 
 				   'place-wlsta', 'place-wondl', 'place-woodl', 'place-wrnst', 'place-lech', 'place-spmnl']
 
+
 def generate_route_json():
 	s = requests.Session()
 	s.headers.update({'accept': 'application/vnd.api+json'})
@@ -170,114 +171,36 @@ def generate_adj_matrix(use_readable_station_names=False, write_to_file=True, fi
 	return df
 
 
-def waels_code():
-	M = generate_adj_matrix(write_to_file=False).to_numpy()
+stop_id_to_name = {}
+total_riders = 0
+def func(row):
+		global total_riders
+		global stop_id_to_name
+		if row["stop_id"] not in stop_id_to_name:
+			stop_id_to_name[row["stop_id"]] = row["stop_name"]
+		total_riders += row["total_ons"]
+		return (row["stop_id"], row["total_ons"])
 
-	N = 300 # assumed total number of trains in the system
-	n = M.shape[0]
-	pi = [1/n]*n + np.random.random(n)/N
-	pi = pi/sum(pi) # made-up target stationary distribution
-
-	Mp = M # modified adjacency so that the Markov chain is ergodic
-	d = np.sum(Mp,axis=1)
-	print('degree:', d)
-	print('\n #nonzero entries:', np.sum(d))
-
-	boundary = np.argwhere(d==1).flatten()
-	for b in boundary:
-	    Mp[b,b] = 1
-	d = np.sum(Mp,axis=1)
-	print('\n modified degrees', d)
-
-	w_supp = np.argwhere(Mp!=0)
-	n_w = len(w_supp)
-
-	T = [[i,j] for i,j in itertools.product(range(n),range(n)) if Mp[i,j] != 0] # the coordinates we care about (~ 300 out of ~ 140k)
-
-	TI = [] # neighbor list
-	q = 0
-	for i in range(n):
-	    TI.append([T[k][1] for k in range(q,q+d[i])])
-	    q += d[i]
-
-	print(TI)
-
-	TI_lengths = [0]
-	q = 0
-	for t in TI:
-	    q += len(t)
-	    TI_lengths.append(q)
-
-	B_pi = np.zeros((n,n_w))
-	for i in range(n):
-	    B_pi[i,TI_lengths[i]:TI_lengths[i+1]] = [pi[j] for j in TI[i]]
-
-	B_1 = np.zeros((n,n_w))
-	for j in range(n):
-	    I = np.array(TI[j])
-	    for i in I:
-	        B_1[j,TI_lengths[i]+np.argwhere(np.array(TI[i])==j)[0,0]] = 1
-
-	zeta = 1
-	B = np.vstack([B_pi,zeta*B_1])
-	c = np.hstack([pi,zeta*np.ones(n)])
-	LB = (1/N)*np.ones(n_w)
-
-	x2 = lsq_linear(B, c, bounds=(LB, np.inf), # solution
-	                method='trf', tol=1e-10, lsq_solver=None, lsmr_tol=None, 
-	                max_iter=None, verbose=0).x
-
-	print((np.matmul(B,x2) - c)/c)
-
-	def weight(i,j,x,TI,TI_lengths):
-	    t = np.argwhere(np.array(TI[i]) == j).flatten()
-	    if len(t):
-	        return x[TI_lengths[i]+t[0]]
-	    return 0
-
-	print('e.g.', weight(0,116,x2,TI,TI_lengths))
-
-	for i in range(n):
-	    print(sum(x2[TI_lengths[i]:TI_lengths[i+1]]))
-
-	X = np.zeros((n,n))
-	for i,j in itertools.product(range(n),range(n)):
-	    X[i,j] = weight(i,j,x2,TI,TI_lengths)
-
-	p0 = np.array([1]+[0]*(n-1)).reshape(n,)
-	p = p0
-	t = 20000
-	for i in range(t):
-	    p = np.matmul(X,p)
-	print(p)
-	print(np.linalg.norm(p-pi,1))
-
+def create_pi(data):
+    pi = {}
+    stop_stats = data.apply(func, axis=1)
+    for stop in stop_stats:
+        if stop[0] == "place-lech" or stop[0] == "place-spmnl":
+            continue
+        if stop[0] not in pi:
+            pi[stop[0]] = 0
+        pi[stop[0]] += stop[1]
+    for stop in pi.keys():
+        pi[stop] /= total_riders
+    return pi
+    
 
 # line and stop data from https://mbta-massdot.opendata.arcgis.com/datasets/mbta-rail-ridership-by-time-period-season-route-line-and-stop
 # Let's pick Fall 2019 PM_PEAK data
 line_data = pd.read_csv("MBTA data.csv")
 fall_2019_line_data = line_data.loc[(line_data["season"] == "Fall 2019") & (line_data["time_period_name"] == "PM_PEAK")]
-pi = {}
-stop_id_to_name = {}
-total_riders = 0
-def func(row):
-	global total_riders
-	global stop_id_to_name
-	if row["stop_id"] not in stop_id_to_name:
-		stop_id_to_name[row["stop_id"]] = row["stop_name"]
-	total_riders += row["total_ons"]
-	return (row["stop_id"], row["total_ons"])
-stop_stats = fall_2019_line_data.apply(func, axis=1)
-for stop in stop_stats:
-	if stop[0] == "place-lech" or stop[0] == "place-spmnl":
-		continue
-	if stop[0] not in pi:
-		pi[stop[0]] = 0
-	pi[stop[0]] += stop[1]
 
-for stop in pi.keys():
-	pi[stop] /= total_riders
-
+pi = create_pi(fall_2019_line_data)
 
 adj_mat_df = generate_adj_matrix(write_to_file=False)
 adj_mat_df_cols = list(adj_mat_df.columns)
@@ -289,6 +212,92 @@ label_dict = {}
 for stop_index in range(len(adj_mat_df_cols)):
 	label_dict[stop_index] = stop_id_to_name[adj_mat_df_cols[stop_index]]
 nx.draw(G, labels=label_dict, font_size=8) 
+plt.show()
+
+
+M = generate_adj_matrix(write_to_file=False).to_numpy()
+
+def opt_setup(M,pi,N=300,zeta=1):
+    n = M.shape[0]
+    Mp = M.copy() # modified adjacency so that the Markov chain is ergodic
+    d = np.sum(Mp,axis=1)
+    #print('degrees:', d)
+    #print('\n #nonzero weights:', np.sum(d))
+
+    boundary = np.argwhere(d==1).flatten()
+    for b in boundary: # make M irreducible
+        Mp[b,b] = 1
+    d = np.sum(Mp,axis=1)
+
+    w_supp = np.argwhere(Mp!=0)
+    n_w = len(w_supp)
+
+    edges = [[i,j] for i,j in itertools.product(range(n),range(n)) if Mp[i,j] != 0] # the edges we care about (~ 300 out of ~ 140k)
+
+    neighbors = [] # neighbor list: neighbors[i] are neighbors of vertex i
+    q = 0
+    for i in range(n):
+        neighbors.append([edges[k][1] for k in range(q,q+d[i])])
+        q += d[i]
+
+    print(neighbors)
+
+    lengths = [0]
+    q = 0
+    for t in neighbors:
+        q += len(t)
+        lengths.append(q)
+
+    B_pi = np.zeros((n,n_w))
+    for i in range(n):
+        B_pi[i,lengths[i]:lengths[i+1]] = [pi[j] for j in neighbors[i]]
+
+    B_1 = np.zeros((n,n_w))
+    for j in range(n):
+        I = np.array(neighbors[j])
+        for i in I:
+            B_1[j,lengths[i]+np.argwhere(np.array(neighbors[i])==j)[0,0]] = 1
+    
+    B_detail = np.zeros((n,n_w))
+    for i in range(n):
+        row1 = np.zeros(n_w)
+        row1[lengths[i]:lengths[i+1]] = [pi[j] for j in neighbors[i]]
+        row2 = np.zeros(n_w)
+        K = np.array(neighbors[i])
+        for k in K:
+            row2[lengths[i]+np.argwhere(np.array(neighbors[k])==i)[0,0]] = pi[i]
+        B_detail[i] = row1 - row2
+
+    B = np.vstack([B_pi,zeta*B_1,B_detail])
+    c = np.hstack([pi,zeta*np.ones(n),np.zeros(n)])
+    LB = (1/N)*np.ones(n_w)
+    
+    return B,c,LB,neighbors,lengths
+    
+B,c,LB,neighbors,lengths = opt_setup(adj_mat,pi)
+
+x1 = lsq_linear(B, c, bounds=(LB, np.inf), # solution
+                method='trf', tol=1e-10, lsq_solver=None, lsmr_tol=None, 
+                max_iter=None, verbose=0).x
+                
+def weight(i,j,x,neighbors,lengths):
+    t = np.argwhere(np.array(neighbors[i]) == j).flatten()
+    if len(t):
+        return x[lengths[i]+t[0]]
+    return 0
+    
+n = B.shape[0]//3
+W_sol = np.zeros((n,n))
+for i,j in itertools.product(range(n),range(n)):
+    W_sol[i,j] = weight(i,j,x1,neighbors,lengths)
+    
+M_sol = np.matmul(W_sol,np.diag(1/pi))
+
+E = np.sum(M_sol,0)/np.sum(M_sol,1) + np.sum(M_sol,1)/np.sum(M_sol,0)
+
+print(E)
+
+plt.hist(E,bins=100)
 plt.show()
 
 

@@ -8,6 +8,51 @@ import time
 import itertools
 from scipy.optimize import lsq_linear
 
+import networkx as nx 
+import matplotlib.pyplot as plt
+
+MBTA_SUBWAY_STATIONS = set("Alewife, Andrew, Ashmont, Braintree, Broadway, Central, Charles/MGH, Davis,"\
+					   " Downtown Crossing, Fields Corner, Harvard, JFK/UMass, Kendall/MIT, North Quincy,"\
+					   " Park Street, Porter, Quincy Adams, Quincy Center, Savin Hill, Shawmut, South Station,"\
+					   " Wollaston, Assembly, Back Bay, Chinatown, Community College, Downtown Crossing,"\
+					   " Forest Hills, Green Street, Haymarket, Jackson Square, Malden Center,"\
+					   " Massachusetts Avenue, North Station, Oak Grove, Roxbury Crossing, Ruggles, State,"\
+					   " Stony Brook, Sullivan Square, Tufts Medical Center, Wellington, Allston Street,"\
+					   " Arlington, Babcock Street, Back of the Hill, Beaconsfield, Blandford Street,"\
+					   " Boston College, Boston University Central, Boston University East, Boston University West,"\
+					   " Boylston, Brandon Hall, Brigham Circle, Brookline Hills, Brookline Village, Chestnut Hill,"\
+					   " Chestnut Hill Avenue, Chiswick Road, Cleveland Circle, Coolidge Corner, Copley, Dean Road,"\
+					   " Eliot, Englewood Avenue, Fairbanks Street, Fenway, Fenwood Road, Government Center,"\
+					   " Griggs Street, Harvard Avenue, Hawes Street, Haymarket, Heath Street,"\
+					   " Hynes Convention Center, Kenmore, Kent Street, Lechmere, Longwood, Longwood Medical Area,"\
+					   " Mission Park, Museum of Fine Arts, Newton Centre, Newton Highlands, North Station,"\
+					   " Northeastern University, Packards Corner, Park Street, Pleasant Street, Prudential,"\
+					   " Reservoir, Riverside, Riverway, Saint Mary's Street, Saint Paul Street (B), Saint Paul Street (C),"\
+					   " South Street, Summit Avenue, Sutherland Road, Symphony, Tappan Street, Waban, Warren Street,"\
+					   " Washington Square, Washington Street, Woodland, Airport, Aquarium, Beachmont, Bowdoin,"\
+					   " Government Center, Maverick, Orient Heights, Revere Beach, State, Science Park/West End,"\
+					   "Suffolk Downs, Wonderland, Wood Island".replace(", ", ",").split(","))
+
+MBTA_SUBWAY_IDS = ['place-alfcl', 'place-alsgr', 'place-andrw', 'place-aport', 'place-aqucl', 'place-armnl', 
+				   'place-asmnl', 'place-astao', 'place-babck', 'place-bbsta', 'place-bckhl', 'place-bcnfd', 
+				   'place-bcnwa', 'place-bland', 'place-bmmnl', 'place-bndhl', 'place-bomnl', 'place-boyls', 
+				   'place-brdwy', 'place-brico', 'place-brkhl', 'place-brmnl', 'place-brntn', 'place-bucen', 
+				   'place-buest', 'place-buwst', 'place-bvmnl', 'place-ccmnl', 'place-chhil', 'place-chill', 
+				   'place-chmnl', 'place-chncl', 'place-chswk', 'place-clmnl', 'place-cntsq', 'place-coecl', 
+				   'place-cool', 'place-davis', 'place-denrd', 'place-dwnxg', 'place-eliot', 'place-engav', 
+				   'place-fbkst', 'place-fenwd', 'place-fenwy', 'place-fldcr', 'place-forhl', 'place-gover', 
+				   'place-grigg', 'place-grnst', 'place-haecl', 'place-harsq', 'place-harvd', 'place-hsmnl', 
+				   'place-hwsst', 'place-hymnl', 'place-jaksn', 'place-jfk', 'place-kencl', 'place-knncl', 
+				   'place-kntst', 'place-lake', 'place-lngmd', 'place-longw', 'place-masta', 'place-mfa', 
+				   'place-mispk', 'place-mlmnl', 'place-mvbcl', 'place-newtn', 'place-newto', 'place-north', 
+				   'place-nqncy', 'place-nuniv', 'place-ogmnl', 'place-orhte', 'place-pktrm', 'place-plsgr', 
+				   'place-portr', 'place-prmnl', 'place-qamnl', 'place-qnctr', 'place-rbmnl', 'place-rcmnl', 
+				   'place-river', 'place-rsmnl', 'place-rugg', 'place-rvrwy', 'place-sbmnl', 'place-sdmnl', 
+				   'place-shmnl', 'place-smary', 'place-smmnl', 'place-sougr', 'place-sstat', 'place-state', 
+				   'place-sthld', 'place-stplb', 'place-stpul', 'place-sull', 'place-sumav', 'place-symcl', 
+				   'place-tapst', 'place-tumnl', 'place-waban', 'place-wascm', 'place-welln', 'place-wimnl', 
+				   'place-wlsta', 'place-wondl', 'place-woodl', 'place-wrnst', 'place-lech', 'place-spmnl']
+
 def generate_route_json():
 	s = requests.Session()
 	s.headers.update({'accept': 'application/vnd.api+json'})
@@ -44,12 +89,14 @@ def generate_route_json():
 		
 		descriptive_trip_stops = []
 		for stop in trip_stops:
-			#stop_id = stop['id']
-			#get_stop_name_str = "https://api-v3.mbta.com/stops/%s" % quote(stop_id)
-			#stop_info = requests.get(get_stop_name_str, params=params).json()
+			stop_id = stop['relationships']['parent_station']['data']['id']
+			stop_name = stop['attributes']['name']
+			if stop_id == "place-stplb":
+				stop_name = "Saint Paul Street (B)"
+			elif stop_id == "place-stpul":
+				stop_name = "Saint Paul Street (C)"
 			# if parent_station is present, get the id and then do stop thing again
-			descriptive_trip_stops.append((stop['relationships']['parent_station']['data']['id'],
-										  stop['attributes']['name']))
+			descriptive_trip_stops.append((stop_id, stop_name))
 		trip_stop_dict[str(rep_trip_id)] = descriptive_trip_stops
 
 	with open("mbta_trips", "w") as f:
@@ -105,13 +152,14 @@ def generate_adj_matrix(use_readable_station_names=False, write_to_file=True, fi
 				df[place_id][prev_place_id] = 1
 				df[prev_place_id][place_id] = 1
 
-	# TEMPORARILY HACK TO AVOID MATTAPAN TROLLEY
+	# IGNORE MATTAPAN TROLLEY
 	if not use_readable_station_names:
-		df = df.drop(['place-butlr', 'place-capst', 'place-cedgr', 'place-cenav', 'place-matt', 'place-miltt', 'place-valrd'], axis=0)
-		df = df.drop(['place-butlr', 'place-capst', 'place-cedgr', 'place-cenav', 'place-matt', 'place-miltt', 'place-valrd'], axis=1)
+		mattapan_stations = ['place-butlr', 'place-capst', 'place-cedgr', 'place-cenav', 'place-matt', 'place-miltt', 'place-valrd']
 	else:
-		pass
-
+		mattapan_stations = ["Butler", "Capen Street", "Cedar Grove", "Central Avenue", "Mattapan", "Milton", "Valley Road"]
+	df = df.drop(mattapan_stations, axis=0)
+	df = df.drop(mattapan_stations, axis=1)
+	
 	if write_to_file:
 		if filename is None:
 			filename = "mbta_adj_mat"
@@ -210,9 +258,13 @@ def waels_code():
 line_data = pd.read_csv("MBTA data.csv")
 fall_2019_line_data = line_data.loc[(line_data["season"] == "Fall 2019") & (line_data["time_period_name"] == "PM_PEAK")]
 pi = {}
+stop_id_to_name = {}
 total_riders = 0
 def func(row):
 	global total_riders
+	global stop_id_to_name
+	if row["stop_id"] not in stop_id_to_name:
+		stop_id_to_name[row["stop_id"]] = row["stop_name"]
 	total_riders += row["total_ons"]
 	return (row["stop_id"], row["total_ons"])
 stop_stats = fall_2019_line_data.apply(func, axis=1)
@@ -226,8 +278,17 @@ for stop in stop_stats:
 for stop in pi.keys():
 	pi[stop] /= total_riders
 
+
 adj_mat_df = generate_adj_matrix(write_to_file=False)
-pi = np.array([pi[stop] for stop in iter(adj_mat_df.columns)])
+adj_mat_df_cols = list(adj_mat_df.columns)
+pi = np.array([pi[stop] for stop in adj_mat_df_cols])
 adj_mat = adj_mat_df.to_numpy()
+
+G = nx.from_numpy_matrix(np.array(adj_mat))  
+label_dict = {}
+for stop_index in range(len(adj_mat_df_cols)):
+	label_dict[stop_index] = stop_id_to_name[adj_mat_df_cols[stop_index]]
+nx.draw(G, labels=label_dict, font_size=8) 
+plt.show()
 
 

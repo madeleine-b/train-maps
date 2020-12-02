@@ -226,4 +226,8 @@ for stop in stop_stats:
 for stop in pi.keys():
 	pi[stop] /= total_riders
 
+adj_mat_df = generate_adj_matrix(write_to_file=False)
+pi = np.array([pi[stop] for stop in iter(adj_mat_df.columns)])
+adj_mat = adj_mat_df.to_numpy()
+
 

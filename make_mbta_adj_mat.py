@@ -213,7 +213,6 @@ def generate_adj_matrix(use_readable_station_names=False, write_to_file=True, fi
         mattapan_stations = ["Butler", "Capen Street", "Cedar Grove", "Central Avenue", 
                              "Mattapan", "Milton", "Valley Road"]
         
-    
     with open("mbta_trips_deduped", "r") as f:
         trip_stop_dict = json.load(f)
         for k, v in trip_stop_dict.items():
@@ -288,6 +287,8 @@ adj_mat_df = generate_adj_matrix(write_to_file=False)
 adj_mat_df_cols = list(adj_mat_df.columns)
 # Reorder so the corresponding elements align with the adjacency matrix
 pi = np.array([pi[stop] for stop in adj_mat_df_cols])
+assert len(pi) == len(adj_mat_df_cols), "Mismatch in shape of pi and M"
+
 adj_mat = adj_mat_df.to_numpy().astype('int')
 
 '''for i in range(len(adj_mat_df_cols)):
@@ -351,7 +352,7 @@ def opt_setup(M,pi,N=N,zeta=1):
         row2 = np.zeros(n_w)
         K = np.array(neighbors[i])
         for k in K:
-            row2[lengths[i]+np.argwhere(np.array(neighbors[k])==i)[0,0]] = pi[i]
+            row2[lengths[k]+np.argwhere(np.array(neighbors[k])==i)[0,0]] = pi[i]
         B_detail[i] = row1 - row2
 
     B = np.vstack([B_pi,zeta*B_1,B_detail])

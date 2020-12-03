@@ -188,7 +188,7 @@ def adjust_mbta_hardcoded_stations(adj_mat, use_readable_station_names):
     for stop_id, connections in hardcoded_connections.items():
         stop_name = stop_id_to_name(stop_id) if use_readable_station_names else stop_id
         if stop_name not in adj_mat.columns:
-            adj_mat.insert(len(adj_mat.columns), stop_name, np.zeros(len(adj_mat)))
+            adj_mat.insert(len(adj_mat.columns), stop_name, np.zeros(len(adj_mat), dtype=np.int64))
         adj_mat.loc[stop_name, :] = 0
         adj_mat.loc[:, stop_name] = 0
 
@@ -204,10 +204,6 @@ def generate_adj_matrix(use_readable_station_names=False, write_to_file=True, fi
     stop_info_index = 1 if use_readable_station_names else 0
     all_places = []
     trip_stop_dict = None
-    # Weird trips like skipping from Boylston to Riverside....
-    prohibited_route_ids = ["45803757", "45803758", "45811127", "45804940-20:45-NewtonHighlandsRiverside0",
-                            "45804940-20:45-ReservoirRiverside0", "45804940-20:45-FenwayNewtonHighlands0",
-                            "45805593"]
     # IGNORE MATTAPAN TROLLEY
     if not use_readable_station_names:
         mattapan_stations = ['place-butlr', 'place-capst', 'place-cedgr', 'place-cenav', 
@@ -230,9 +226,6 @@ def generate_adj_matrix(use_readable_station_names=False, write_to_file=True, fi
     df = pd.DataFrame(adjacency_mat, columns=all_places, index=all_places)
 
     for route_ids, route in trip_stop_dict.items():
-        '''if np.any([route_id in prohibited_route_ids for route_id in route_ids]):
-            continue
-        '''
         for i in range(len(route)):
             place_id = route[i][stop_info_index]
             if i != len(route) - 1:
@@ -295,7 +288,7 @@ adj_mat_df = generate_adj_matrix(write_to_file=False)
 adj_mat_df_cols = list(adj_mat_df.columns)
 # Reorder so the corresponding elements align with the adjacency matrix
 pi = np.array([pi[stop] for stop in adj_mat_df_cols])
-adj_mat = adj_mat_df.to_numpy()
+adj_mat = adj_mat_df.to_numpy().astype('int')
 
 '''for i in range(len(adj_mat_df_cols)):
     ns =adj_mat_df.loc[adj_mat_df_cols[i]].to_numpy().nonzero()
@@ -306,11 +299,9 @@ G = nx.from_numpy_matrix(np.array(adj_mat))
 label_dict = {}
 for stop_index in range(len(adj_mat_df_cols)):
     label_dict[stop_index] = stop_id_to_name(adj_mat_df_cols[stop_index])
-#pos = nx.drawing.nx_agraph.graphviz_layout(G)
 nx.draw(G, labels=label_dict, font_size=8) 
 plt.show()
 
-M = generate_adj_matrix(write_to_file=False).to_numpy()
 
 def opt_setup(M,pi,N=N,zeta=1):
     n = M.shape[0]

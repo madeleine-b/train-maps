@@ -144,11 +144,11 @@ def generate_route_json():
             descriptive_trip_stops.append((stop_id, stop_name))
         trip_stop_dict[str(rep_trip_id)] = descriptive_trip_stops
 
-    with open("mbta_trips", "w") as f:
+    with open("mbta-data/mbta_trips", "w") as f:
         json.dump(trip_stop_dict, f)
 
 def dedup_trips():
-    with open("mbta_trips", "r") as f:
+    with open("mbta-data/mbta_trips", "r") as f:
         trip_stop_dict = json.load(f)
         deduped_trip_stop_dict = {}
         for i in range(len(trip_stop_dict)):
@@ -167,7 +167,7 @@ def dedup_trips():
             if not was_duplicate:
                 deduped_trip_stop_dict[(trip_id)] = trip_stop_dict[trip_id]
         
-        with open("mbta_trips_deduped", "w") as f2:
+        with open("mbta-data/mbta_trips_deduped", "w") as f2:
             json.dump({str(k) : v for k, v in deduped_trip_stop_dict.items()}, f2)
 
 def adjust_mbta_hardcoded_stations(adj_mat, use_readable_station_names):
@@ -213,7 +213,7 @@ def generate_adj_matrix(use_readable_station_names=False, write_to_file=True, fi
         mattapan_stations = ["Butler", "Capen Street", "Cedar Grove", "Central Avenue", 
                              "Mattapan", "Milton", "Valley Road"]
         
-    with open("mbta_trips_deduped", "r") as f:
+    with open("mbta-data/mbta_trips_deduped", "r") as f:
         trip_stop_dict = json.load(f)
         for k, v in trip_stop_dict.items():
             for place in v:
@@ -221,8 +221,7 @@ def generate_adj_matrix(use_readable_station_names=False, write_to_file=True, fi
                     all_places.append(place[stop_info_index])
         all_places = np.unique(np.array(all_places))
 
-    adjacency_mat = np.zeros((len(all_places), len(all_places))).astype('int')
-    df = pd.DataFrame(adjacency_mat, columns=all_places, index=all_places)
+    df = pd.DataFrame(0, columns=all_places, index=all_places)
 
     for route_ids, route in trip_stop_dict.items():
         for i in range(len(route)):

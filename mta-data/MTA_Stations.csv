@@ -1,4 +1,4 @@
-Station ID,Complex ID,GTFS Stop ID,Division,Line,Stop Name,Borough,Daytime Routes,Structure,GTFS Latitude,GTFS Longitude,North Direction Label,South Direction Label,ADA,ADA Notes
+Station_ID,Complex_ID,GTFS_Stop_ID,Division,Line,Stop_Name,Borough,Daytime_Routes,Structure,GTFS_Latitude,GTFS_Longitude,North_Direction_Label,South_Direction_Label,ADA,ADA_Notes
 1,1,R01,BMT,Astoria,Astoria-Ditmars Blvd,Q,N W,Elevated,40.775036,-73.912034,,Manhattan,0,
 2,2,R03,BMT,Astoria,Astoria Blvd,Q,N W,Elevated,40.770258,-73.917843,Ditmars Blvd,Manhattan,1,
 3,3,R04,BMT,Astoria,30 Av,Q,N W,Elevated,40.766779,-73.921479,Astoria - Ditmars Blvd,Manhattan,0,

@@ -276,7 +276,7 @@ total_riders = 0
 
 # line and stop data from https://mbta-massdot.opendata.arcgis.com/datasets/mbta-rail-ridership-by-time-period-season-route-line-and-stop
 # Let's pick Fall 2019 PM_PEAK data
-line_data = pd.read_csv("MBTA data.csv")
+line_data = pd.read_csv("mbta-data/MBTA data.csv")
 fall_2019_line_data = line_data.loc[(line_data["season"] == "Fall 2019") & (line_data["time_period_name"] == "PM_PEAK")]
 N = 300
 pi = create_pi(fall_2019_line_data, N)

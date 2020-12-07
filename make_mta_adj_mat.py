@@ -67,7 +67,16 @@ def generate_adjacency_matrix(use_readable_names=False, write_to_file=True, file
 			adjacency_mat.to_json(f)
 	return adjacency_mat
 
-generate_adjacency_matrix(use_readable_names=False)
+def draw_subway_graph(adj_mat):
+	G = nx.from_numpy_matrix(np.array(adj_mat)) 
+	label_dict = {}
+	for stop_index in range(len(adj_mat.columns)):
+		stop = adj_mat.columns[stop_index]
+		label_dict[stop_index] = stop_id_to_parent_station(stop, True)
+	nx.draw(G, labels=label_dict, font_size=8) 
+	plt.show()
+
+#generate_adjacency_matrix(use_readable_names=False)
 
 old_adj_mat = None
 adj_mat = None
@@ -124,10 +133,7 @@ for dups in columns_to_combine:
 	adj_mat.loc[dups[0]] = adjacency_sum
 	removed_stop_ids.append(set(dups[1:]))
 
-G = nx.from_numpy_matrix(np.array(adj_mat)) 
-label_dict = {}
-for stop_index in range(len(adj_mat.columns)):
-	stop = adj_mat.columns[stop_index]
-	label_dict[stop_index] = stop_id_to_parent_station(stop, True)
-nx.draw(G, labels=label_dict, font_size=8) 
-plt.show()
+# Rewrite adjacency matrix file after squashing
+with open("mta-data/mta_adjacency_mat", "w") as f:
+	adj_mat.to_json(f)
+

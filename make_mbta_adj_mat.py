@@ -335,12 +335,15 @@ green_c = ["Cleveland Circle","Englewood Avenue","Dean Road","Tappan Street","Wa
             "Kent Street","Hawes Street","Saint Mary's Street", "Kenmore","Hynes Convention Center", 
             "Copley", "Arlington", "Boylston","Park Street", "Government Center","Haymarket", "North Station"]
 
-
+# Stations which are allowed to hold more trains that outwardly appearing connections
+# e.g. Government Center has 2 green line tracks plus a non-revenue loop since D-line trains
+# turn around there
 terminal_stations = ["Alewife", "Ashmont", "Braintree", "Forest Hills", "Oak Grove", "Wonderland", 
                      "Bowdoin", "Heath Street", "Boston College", "Riverside", "Cleveland Circle",
                       "Lechmere", "Park Street", "Government Center", "North Station"]
-red_stations = red_common + red_braintree + red_ashmont
-green_stations = green_b + green_c + green_e + green_d
+
+red_stations = list(set(red_common + red_braintree + red_ashmont))
+green_stations = list(set(green_b + green_c + green_e + green_d))
 
 real_schedule_adj_mat = {}
 max_blue_trains = 15
@@ -376,19 +379,25 @@ real_schedule_adj_mat["Blue"]["Bowdoin"] += 2
 real_schedule_adj_mat["Blue"]["Wonderland"] += 1
 real_schedule_adj_mat["Green"]["Riverside"] += 7
 real_schedule_adj_mat["Green"]["Cleveland Circle"] += 6
-real_schedule_adj_mat["Green"]["Boston College"] += 7
+real_schedule_adj_mat["Green"]["Boston College"] += 6
 real_schedule_adj_mat["Green"]["Heath Street"] += 7
 real_schedule_adj_mat["Green"]["Lechmere"] += 7
-
-'''
-for node in terminal_stations:
-  adj_mat_df[stop_name_to_id(node)][stop_name_to_id(node)] = 1
-'''
 
 def out_edges_of_stop(name):
   neighs = adj_mat_df.columns[adj_mat_df[stop_name_to_id(name)].to_numpy().nonzero()[0]]
   return [stop_id_to_name(neigh) for neigh in neighs]
 
+# Returns True if sending a train to each node in |outs|
+# and applying |update| would result in a station trying to hold more
+# trains than tracks it has (which we assume to be the number of
+# neighbors unless it's a terminal station)
+def invalid_update(outs, update, current_adj_mat):
+  for node in outs:
+    if node in update and \
+       node not in terminal_stations and \
+      (current_adj_mat[node] + update[node] + 1) > len(out_edges_of_stop(node)):
+      return True
+  return False
 
 while t < 180:
   if t % 9 == 0:
@@ -452,12 +461,109 @@ while t < 180:
         total_trains_along_each_edge[node][node] += real_schedule_adj_mat["Orange"][node] - len(outs)
     for node in update:
       real_schedule_adj_mat["Orange"][node] += update[node]
-    # move D line trains
-    # move B line trains
+    
+    # move D and B line trains
+    if t % 7 != 0:
+      update = {}
+      joint_stations = list(set(green_d + green_b))
+      for node in joint_stations:
+        all_outs = out_edges_of_stop(node)
+        all_outs = [node for node in all_outs if node in joint_stations]
+        outs = random.sample(all_outs, k=min(real_schedule_adj_mat["Green"][node], len(all_outs)))
+        retries = 100
+        while node not in terminal_stations and invalid_update(outs, update, real_schedule_adj_mat["Green"]):
+          outs = random.sample(all_outs, k=min(real_schedule_adj_mat["Green"][node], len(all_outs)))
+          retries -= 1
+          if retries < 0:
+            outs = []
+            break
+        for i in range(len(outs)):
+          update[outs[i]] = 1 if outs[i] not in update else update[outs[i]] + 1
+          update[node] = -1 if node not in update else update[node] - 1
+          total_trains_along_each_edge[outs[i]][node] += 1
+      for node in update:
+        real_schedule_adj_mat["Green"][node] += update[node]
+        if real_schedule_adj_mat["Green"][node] > len(out_edges_of_stop(node)):
+          if node not in terminal_stations:
+            # The Green line is weird. I think this is close to what the MBTA does—sometimes they just
+            # send trains to the other branches. So, we'll do that if we are running into a satisfiability problem.
+            random_terminal = random.choice(["Lechmere", "Boston College", "Cleveland Circle", "Riverside", "Heath Street"])
+            extra_trains = real_schedule_adj_mat["Green"][node] - len(out_edges_of_stop(node))
+            real_schedule_adj_mat["Green"][node] = len(out_edges_of_stop(node))
+            real_schedule_adj_mat["Green"][random_terminal] += extra_trains
+          else:
+            # Kept some at station, i.e. self-loop
+            # Don't put in adjacency matrix so we don't CHOOSE to keep trains we could send
+            total_trains_along_each_edge[node][node] += real_schedule_adj_mat["Green"][node] - len(out_edges_of_stop(node))
+    
   if t % 7 == 0:
-    pass
-    # move C line trains
-    # move E line trains
+    # move C and E line trains
+    if t % 6 != 0:
+      update = {}
+      joint_stations = list(set(green_c + green_e))
+      for node in joint_stations:
+        all_outs = out_edges_of_stop(node)
+        all_outs = [node for node in all_outs if node in joint_stations]
+        #print(min(real_schedule_adj_mat["Green"][node], len(all_outs)))
+        outs = random.sample(all_outs, k=min(real_schedule_adj_mat["Green"][node], len(all_outs)))
+        retries = 100
+        while node not in terminal_stations and invalid_update(outs, update, real_schedule_adj_mat["Green"]):
+          outs = random.sample(all_outs, k=min(real_schedule_adj_mat["Green"][node], len(all_outs)))
+          retries -= 1
+          if retries < 0:
+            outs = []
+            break
+        for i in range(len(outs)):
+          update[outs[i]] = 1 if outs[i] not in update else update[outs[i]] + 1
+          update[node] = -1 if node not in update else update[node] - 1
+          total_trains_along_each_edge[outs[i]][node] += 1
+      for node in update:
+        real_schedule_adj_mat["Green"][node] += update[node]
+        if real_schedule_adj_mat["Green"][node] > len(out_edges_of_stop(node)):
+          if node not in terminal_stations:
+            # The Green line is weird. I think this is close to what the MBTA does—sometimes they just
+            # send trains to the other branches. So, we'll do that if we are running into a satisfiability problem.
+            random_terminal = random.choice(["Lechmere", "Boston College", "Cleveland Circle", "Riverside", "Heath Street"])
+            extra_trains = real_schedule_adj_mat["Green"][node] - len(out_edges_of_stop(node))
+            real_schedule_adj_mat["Green"][node] = len(out_edges_of_stop(node))
+            real_schedule_adj_mat["Green"][random_terminal] += extra_trains
+          else:
+            # Kept some at station, i.e. self-loop
+            # Don't put in adjacency matrix so we don't CHOOSE to keep trains we could send
+            total_trains_along_each_edge[node][node] += real_schedule_adj_mat["Green"][node] - len(out_edges_of_stop(node))
+
+  if t % 7 == 0 and t % 6 == 0:
+    # simultaneously moving all green line trains
+    update = {}
+    for node in green_stations:
+      all_outs = out_edges_of_stop(node)
+      all_outs = [node for node in all_outs if node in green_stations]
+      outs = random.sample(all_outs, k=min(real_schedule_adj_mat["Green"][node], len(all_outs)))
+      retries = 100
+      while node not in terminal_stations and invalid_update(outs, update, real_schedule_adj_mat["Green"]):
+        outs = random.sample(all_outs, k=min(real_schedule_adj_mat["Green"][node], len(all_outs)))
+        retries -= 1
+        if retries < 0:
+          outs = []
+          break
+      for i in range(len(outs)):
+        update[outs[i]] = 1 if outs[i] not in update else update[outs[i]] + 1
+        update[node] = -1 if node not in update else update[node] - 1
+        total_trains_along_each_edge[outs[i]][node] += 1
+    for node in update:
+        real_schedule_adj_mat["Green"][node] += update[node]
+        if real_schedule_adj_mat["Green"][node] > len(out_edges_of_stop(node)):
+          if node not in terminal_stations:
+            # The Green line is weird. I think this is close to what the MBTA does—sometimes they just
+            # send trains to the other branches. So, we'll do that if we are running into a satisfiability problem.
+            random_terminal = random.choice(["Lechmere", "Boston College", "Cleveland Circle", "Riverside", "Heath Street"])
+            extra_trains = real_schedule_adj_mat["Green"][node] - len(out_edges_of_stop(node))
+            real_schedule_adj_mat["Green"][node] = len(out_edges_of_stop(node))
+            real_schedule_adj_mat["Green"][random_terminal] += extra_trains
+          else:
+            # Kept some at station, i.e. self-loop
+            # Don't put in adjacency matrix so we don't CHOOSE to keep trains we could send
+            total_trains_along_each_edge[node][node] += real_schedule_adj_mat["Green"][node] - len(out_edges_of_stop(node))
   t += 1
 
 total = 0
@@ -476,10 +582,7 @@ total = 0
 for node in green_stations:
   total += real_schedule_adj_mat["Green"][node]
 assert total == max_green_trains
-for s in green_stations:
-  print(s)
-  print(total_trains_along_each_edge[s])
-  print("----------")
+
 quit()
 def opt_setup(M,pi,N=N,zeta=1):
     n = M.shape[0]

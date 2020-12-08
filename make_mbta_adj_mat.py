@@ -99,6 +99,12 @@ def stop_id_to_name(stop_id):
                'place-sstat': 'South Station', 'place-wlsta': 'Wollaston'}
     return mapping[stop_id]
 
+def stop_name_to_id(stop_name):
+  for s_id in MBTA_SUBWAY_IDS:
+    if stop_id_to_name(s_id) == stop_name:
+      return s_id
+  assert False, "Stop name %s not found" % stop_name
+
 def generate_route_json():
     confirm = input("Are you sure you want to grab current MBTA schedule information? This may mess up things Y/N")
     if confirm != "Y":
@@ -296,19 +302,32 @@ assert len(pi) == len(adj_mat_df_cols), "Mismatch in shape of pi and M"
 
 adj_mat = adj_mat_df.to_numpy().astype('int')
 
-'''for i in range(len(adj_mat_df_cols)):
-    ns =adj_mat_df.loc[adj_mat_df_cols[i]].to_numpy().nonzero()
-    print("stop", adj_mat_df_cols[i], stop_id_to_name(adj_mat_df_cols[i]), 
-         "connected to", [adj_mat_df_cols[s] + " " + stop_id_to_name(adj_mat_df_cols[s]) for s in ns[0]])
-'''
-G = nx.from_numpy_matrix(np.array(adj_mat))  
-label_dict = {}
-for stop_index in range(len(adj_mat_df_cols)):
-    label_dict[stop_index] = stop_id_to_name(adj_mat_df_cols[stop_index])
-nx.draw(G, labels=label_dict, font_size=8) 
-plt.show()
+orange_stations = ["Forest Hills","Green Street","Stony Brook","Jackson Square","Roxbury Crossing",
+                   "Ruggles","Massachusetts Avenue","Back Bay","Tufts Medical Center","Chinatown",
+                   "Downtown Crossing","State","Haymarket","North Station","Community College",
+                   "Sullivan Square","Assembly","Wellington","Malden Center","Oak Grove"]
+blue_stations = ["Bowdoin","Government Center","State","Aquarium","Maverick","Airport","Wood Island","Orient Heights","Suffolk Downs","Beachmont","Revere Beach","Wonderland"]
+
+red_common = ["Alewife","Davis","Porter","Harvard","Central","Kendall/MIT","Charles/MGH",
+              "Park Street","Downtown Crossing","South Station","Broadway","Andrew","JFK/UMass"]
+red_ashmont = ["Savin Hill","Fields Corner","Shawmut","Ashmont"]
+red_braintree = ["North Quincy","Wollaston","Quincy Center","Quincy Adams","Braintree"]
+green_common = ["Lechmere","Science Park/West End","Haymarket","Government Center","Park Street","Boylston","Arlington","Copley"]
+green_heath = ["Heath Street","Back of the Hill","Riverway","Mission Park","Fenwood Road","Brigham Circle",
+               "Longwood Medical Area","Museum of Fine Arts","Northeastern University","Symphony","Prudential"]
+green_riverside = ["Riverside","Woodland","Waban","Eliot","Newton Highlands","Newton Centre","Chestnut Hill",
+                   "Reservoir","Beaconsfield","Brookline Hills","Brookline Village","Longwood","Fenway"]
+green_bc = ["Boston College","South Street","Chestnut Hill Avenue","Chiswick Road","Sutherland Road",
+            "Washington Street","Warren Street","Allston Street","Griggs Street","Harvard Avenue",
+            "Packards Corner","Babcock Street","Pleasant Street","Saint Paul Street (B)",
+            "Boston University West","Boston University Central","Boston University East","Blandford Street"]
+green_cc = ["Cleveland Circle","Englewood Avenue","Dean Road","Tappan Street","Washington Square",
+            "Fairbanks Street","Brandon Hall","Summit Avenue","Coolidge Corner","Saint Paul Street (C)",
+            "Kent Street","Hawes Street","Saint Mary's Street"]
+green_bcd = ["Kenmore","Hynes Convention Center"]
 
 
+quit()
 def opt_setup(M,pi,N=N,zeta=1):
     n = M.shape[0]
     Mp = M.copy() # modified adjacency so that the Markov chain is ergodic

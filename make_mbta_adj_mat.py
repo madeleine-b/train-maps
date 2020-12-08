@@ -63,22 +63,22 @@ def stop_id_to_name(stop_id):
                'place-bckhl': 'Back of the Hill', 'place-bcnfd': 'Beaconsfield', 'place-bcnwa': 'Washington Square', 
                'place-bland': 'Blandford Street', 'place-bndhl': 'Brandon Hall', 'place-boyls': 'Boylston', 
                'place-brico': 'Packards Corner', 'place-brkhl': 'Brookline Hills', 'place-brmnl': 'Brigham Circle', 
-               'place-bucen': 'Boston Univ. Central', 'place-buest': 'Boston Univ. East', 
-               'place-buwst': 'Boston Univ. West', 'place-bvmnl': 'Brookline Village', 'place-chhil': 'Chestnut Hill', 
-               'place-chill': 'Chestnut Hill Ave.', 'place-chswk': 'Chiswick Road', 'place-clmnl': 'Cleveland Circle', 
+               'place-bucen': 'Boston University Central', 'place-buest': 'Boston University East', 
+               'place-buwst': 'Boston University West', 'place-bvmnl': 'Brookline Village', 'place-chhil': 'Chestnut Hill', 
+               'place-chill': 'Chestnut Hill Avenue', 'place-chswk': 'Chiswick Road', 'place-clmnl': 'Cleveland Circle', 
                'place-coecl': 'Copley', 'place-cool': 'Coolidge Corner', 'place-denrd': 'Dean Road', 'place-eliot': 'Eliot', 
-               'place-engav': 'Englewood Ave.', 'place-fbkst': 'Fairbanks Street', 'place-fenwd': 'Fenwood Road', 
+               'place-engav': 'Englewood Avenue', 'place-fbkst': 'Fairbanks Street', 'place-fenwd': 'Fenwood Road', 
                'place-fenwy': 'Fenway', 'place-gover': 'Government Center', 'place-grigg': 'Griggs Street',
-               'place-haecl': 'Haymarket', 'place-harvd': 'Harvard Ave.', 'place-hsmnl': 'Heath Street', 
+               'place-haecl': 'Haymarket', 'place-harvd': 'Harvard Avenue', 'place-hsmnl': 'Heath Street', 
                'place-hwsst': 'Hawes Street', 'place-hymnl': 'Hynes Convention Center', 'place-kencl': 'Kenmore', 
                'place-kntst': 'Kent Street', 'place-lake': 'Boston College', 'place-lech': 'Lechmere', 
                'place-lngmd': 'Longwood Medical Area', 'place-longw': 'Longwood', 'place-mfa': 'Museum of Fine Arts',
                'place-mispk': 'Mission Park', 'place-newtn': 'Newton Highlands', 'place-newto': 'Newton Centre', 
                'place-north': 'North Station', 'place-nuniv': 'Northeastern University', 'place-pktrm': 'Park Street', 
                'place-plsgr': 'Pleasant Street', 'place-prmnl': 'Prudential', 'place-river': 'Riverside', 
-               'place-rsmnl': 'Reservoir', 'place-rvrwy': 'Riverway', 'place-smary': 'Saint Mary Street', 
-               'place-sougr': 'South Street', 'place-spmnl': 'Science Park', 'place-sthld': 'Sutherland Road', 
-               'place-stplb': 'Saint Paul Street', 'place-stpul': 'Saint Paul Street', 'place-sumav': 'Summit Ave.', 
+               'place-rsmnl': 'Reservoir', 'place-rvrwy': 'Riverway', 'place-smary': "Saint Mary's Street", 
+               'place-sougr': 'South Street', 'place-spmnl': 'Science Park/West End', 'place-sthld': 'Sutherland Road', 
+               'place-stplb': 'Saint Paul Street (B)', 'place-stpul': 'Saint Paul Street (C)', 'place-sumav': 'Summit Avenue', 
                'place-symcl': 'Symphony', 'place-tapst': 'Tappan Street', 'place-waban': 'Waban', 
                'place-wascm': 'Washington Street', 'place-woodl': 'Woodland', 'place-wrnst': 'Warren Street', 
                'place-bmmnl': 'Beachmont', 'place-bomnl': 'Bowdoin', 'place-mvbcl': 'Maverick', 
@@ -93,7 +93,7 @@ def stop_id_to_name(stop_id):
                'place-welln': 'Wellington', 'place-alfcl': 'Alewife', 'place-andrw': 'Andrew', 'place-asmnl': 'Ashmont', 
                'place-brdwy': 'Broadway', 'place-brntn': 'Braintree', 'place-chmnl': 'Charles/MGH', 
                'place-cntsq': 'Central', 'place-davis': 'Davis', 'place-fldcr': 'Fields Corner', 
-               'place-harsq': 'Harvard', 'place-jfk': 'JFK/Umass', 'place-knncl': 'Kendall/MIT', 
+               'place-harsq': 'Harvard', 'place-jfk': 'JFK/UMass', 'place-knncl': 'Kendall/MIT', 
                'place-nqncy': 'North Quincy', 'place-portr': 'Porter', 'place-qamnl': 'Quincy Adams', 
                'place-qnctr': 'Quincy Center', 'place-shmnl': 'Savin Hill', 'place-smmnl': 'Shawmut', 
                'place-sstat': 'South Station', 'place-wlsta': 'Wollaston'}
@@ -313,22 +313,34 @@ red_common = ["Alewife","Davis","Porter","Harvard","Central","Kendall/MIT","Char
               "Park Street","Downtown Crossing","South Station","Broadway","Andrew","JFK/UMass"]
 red_ashmont = ["Savin Hill","Fields Corner","Shawmut","Ashmont"]
 red_braintree = ["North Quincy","Wollaston","Quincy Center","Quincy Adams","Braintree"]
-green_common = ["Lechmere","Science Park/West End","Haymarket","Government Center","Park Street","Boylston","Arlington","Copley"]
-green_heath = ["Heath Street","Back of the Hill","Riverway","Mission Park","Fenwood Road","Brigham Circle",
-               "Longwood Medical Area","Museum of Fine Arts","Northeastern University","Symphony","Prudential"]
-green_riverside = ["Riverside","Woodland","Waban","Eliot","Newton Highlands","Newton Centre","Chestnut Hill",
-                   "Reservoir","Beaconsfield","Brookline Hills","Brookline Village","Longwood","Fenway"]
-green_bc = ["Boston College","South Street","Chestnut Hill Avenue","Chiswick Road","Sutherland Road",
+
+#green_common = ["Lechmere","Science Park/West End","Haymarket","Government Center","Park Street","Boylston","Arlington","Copley"]
+green_e = ["Heath Street","Back of the Hill","Riverway","Mission Park","Fenwood Road","Brigham Circle",
+            "Longwood Medical Area","Museum of Fine Arts","Northeastern University","Symphony","Prudential",
+            "Copley", "Arlington", "Boylston","Park Street","Government Center","Haymarket", "North Station", 
+            "Science Park/West End", "Lechmere"]
+
+green_d = ["Riverside","Woodland","Waban","Eliot","Newton Highlands","Newton Centre","Chestnut Hill",
+            "Reservoir","Beaconsfield","Brookline Hills","Brookline Village","Longwood","Fenway",
+            "Kenmore","Hynes Convention Center", "Copley", "Arlington", "Boylston","Park Street","Government Center"]
+
+green_b = ["Boston College","South Street","Chestnut Hill Avenue","Chiswick Road","Sutherland Road",
             "Washington Street","Warren Street","Allston Street","Griggs Street","Harvard Avenue",
             "Packards Corner","Babcock Street","Pleasant Street","Saint Paul Street (B)",
-            "Boston University West","Boston University Central","Boston University East","Blandford Street"]
-green_cc = ["Cleveland Circle","Englewood Avenue","Dean Road","Tappan Street","Washington Square",
+            "Boston University West","Boston University Central","Boston University East","Blandford Street",
+            "Kenmore","Hynes Convention Center", "Copley", "Arlington", "Boylston","Park Street"]
+
+green_c = ["Cleveland Circle","Englewood Avenue","Dean Road","Tappan Street","Washington Square",
             "Fairbanks Street","Brandon Hall","Summit Avenue","Coolidge Corner","Saint Paul Street (C)",
-            "Kent Street","Hawes Street","Saint Mary's Street"]
-green_bcd = ["Kenmore","Hynes Convention Center"]
+            "Kent Street","Hawes Street","Saint Mary's Street", "Kenmore","Hynes Convention Center", 
+            "Copley", "Arlington", "Boylston","Park Street", "Government Center","Haymarket", "North Station"]
+
+
 terminal_stations = ["Alewife", "Ashmont", "Braintree", "Forest Hills", "Oak Grove", "Wonderland", 
                      "Bowdoin", "Heath Street", "Boston College", "Riverside", "Cleveland Circle",
-                      "Lechmere"]
+                      "Lechmere", "Park Street", "Government Center", "North Station"]
+red_stations = red_common + red_braintree + red_ashmont
+green_stations = green_b + green_c + green_e + green_d
 
 real_schedule_adj_mat = {}
 max_blue_trains = 15
@@ -347,11 +359,11 @@ for s in blue_stations:
   d[s] = 1
 real_schedule_adj_mat["Blue"] = d
 d = {}
-for s in green_common+green_bc+green_cc+green_heath+green_riverside+green_bcd:
+for s in green_stations:
   d[s] = 1
 real_schedule_adj_mat["Green"] = d
 d = {}
-for s in red_common+red_braintree+red_ashmont:
+for s in red_stations:
   d[s] = 1
 real_schedule_adj_mat["Red"] = d
 
@@ -381,25 +393,38 @@ def out_edges_of_stop(name):
 while t < 180:
   if t % 9 == 0:
     # move red line trains
-    pass
+    update = {}
+    for node in red_stations:
+      all_outs = out_edges_of_stop(node)
+      all_outs = [node for node in all_outs if node in red_stations]
+      outs = random.sample(all_outs, k=min(real_schedule_adj_mat["Red"][node], len(all_outs)))
+      for i in range(len(outs)):
+        update[outs[i]] = 1 if outs[i] not in update else update[outs[i]] + 1
+        update[node] = -1 if node not in update else update[node] - 1
+        total_trains_along_each_edge[outs[i]][node] += 1
+      if real_schedule_adj_mat["Red"][node] > len(outs):
+        # Kept some at station, i.e. self-loop
+        # Don't put in adjacency matrix so we don't CHOOSE to keep trains we could send
+        total_trains_along_each_edge[node][node] += real_schedule_adj_mat["Red"][node] - len(outs)
+    for node in update:
+      real_schedule_adj_mat["Red"][node] += update[node]
+      if real_schedule_adj_mat["Red"][node] > len(out_edges_of_stop(node)):
+        assert node in terminal_stations, \
+              "Trying to keep %d trains at %s but it isn't a terminal station" % (real_schedule_adj_mat["Red"][node], node)
   if t % 5 == 0:
     # move blue line trains
     update = {}
     for node in blue_stations:
-      #print("Currently", node, "has", real_schedule_adj_mat[node], "trains")
       all_outs = out_edges_of_stop(node)
       all_outs = [node for node in all_outs if node in blue_stations]
-      #print("It is connected to", all_outs)
       outs = random.sample(all_outs, k=min(real_schedule_adj_mat["Blue"][node], len(all_outs)))
       for i in range(len(outs)):
-        #print("Sending 1 train from", node, "to", outs[i])
         update[outs[i]] = 1 if outs[i] not in update else update[outs[i]] + 1
         update[node] = -1 if node not in update else update[node] - 1
         total_trains_along_each_edge[outs[i]][node] += 1
       if real_schedule_adj_mat["Blue"][node] > len(outs):
         # Kept some at station, i.e. self-loop
         # Don't put in adjacency matrix so we don't CHOOSE to keep trains we could send
-        #print("kept", real_schedule_adj_mat[node] - len(all_outs), "trains at", node)
         total_trains_along_each_edge[node][node] += real_schedule_adj_mat["Blue"][node] - len(outs)
     for node in update:
       real_schedule_adj_mat["Blue"][node] += update[node]
@@ -443,6 +468,18 @@ total = 0
 for node in blue_stations:
   total += real_schedule_adj_mat["Blue"][node]
 assert total == max_blue_trains
+total = 0
+for node in red_stations:
+  total += real_schedule_adj_mat["Red"][node]
+assert total == max_red_trains
+total = 0
+for node in green_stations:
+  total += real_schedule_adj_mat["Green"][node]
+assert total == max_green_trains
+for s in green_stations:
+  print(s)
+  print(total_trains_along_each_edge[s])
+  print("----------")
 quit()
 def opt_setup(M,pi,N=N,zeta=1):
     n = M.shape[0]

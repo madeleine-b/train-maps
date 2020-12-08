@@ -97,6 +97,9 @@ def stop_id_to_name(stop_id):
     return mapping[stop_id]
 
 def generate_route_json():
+    confirm = input("Are you sure you want to grab current MBTA schedule information? This may mess up things Y/N")
+    if confirm != "Y":
+      return
     s = requests.Session()
     s.headers.update({'accept': 'application/vnd.api+json'})
 

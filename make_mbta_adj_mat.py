@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import json
 import time
-
+import random
 import itertools
 from scipy.optimize import lsq_linear
 
@@ -83,11 +83,11 @@ def stop_id_to_name(stop_id):
                'place-wascm': 'Washington Street', 'place-woodl': 'Woodland', 'place-wrnst': 'Warren Street', 
                'place-bmmnl': 'Beachmont', 'place-bomnl': 'Bowdoin', 'place-mvbcl': 'Maverick', 
                'place-orhte': 'Orient Heights', 'place-rbmnl': 'Revere Beach', 'place-sdmnl': 'Suffolk Downs', 
-               'place-state': 'State Street', 'place-wimnl': 'Wood Island', 'place-wondl': 'Wonderland', 
+               'place-state': 'State', 'place-wimnl': 'Wood Island', 'place-wondl': 'Wonderland', 
                'place-aport': 'Airport', 'place-aqucl': 'Aquarium', 'place-astao': 'Assembly', 
                'place-bbsta': 'Back Bay', 'place-ccmnl': 'Community College', 'place-chncl': 'Chinatown', 
                'place-dwnxg': 'Downtown Crossing', 'place-forhl': 'Forest Hills', 'place-grnst': 'Green Street', 
-               'place-jaksn': 'Jackson Square', 'place-masta': 'Massachusetts Ave.', 'place-mlmnl': 'Malden Center', 
+               'place-jaksn': 'Jackson Square', 'place-masta': 'Massachusetts Avenue', 'place-mlmnl': 'Malden Center', 
                'place-ogmnl': 'Oak Grove', 'place-rcmnl': 'Roxbury Crossing', 'place-rugg': 'Ruggles', 
                'place-sbmnl': 'Stony Brook', 'place-sull': 'Sullivan Square', 'place-tumnl': 'Tufts Medical Center', 
                'place-welln': 'Wellington', 'place-alfcl': 'Alewife', 'place-andrw': 'Andrew', 'place-asmnl': 'Ashmont', 
@@ -306,8 +306,9 @@ orange_stations = ["Forest Hills","Green Street","Stony Brook","Jackson Square",
                    "Ruggles","Massachusetts Avenue","Back Bay","Tufts Medical Center","Chinatown",
                    "Downtown Crossing","State","Haymarket","North Station","Community College",
                    "Sullivan Square","Assembly","Wellington","Malden Center","Oak Grove"]
-blue_stations = ["Bowdoin","Government Center","State","Aquarium","Maverick","Airport","Wood Island","Orient Heights","Suffolk Downs","Beachmont","Revere Beach","Wonderland"]
-
+blue_stations = ["Bowdoin","Government Center","State","Aquarium","Maverick","Airport","Wood Island",
+                 "Orient Heights","Suffolk Downs","Beachmont","Revere Beach",
+                 "Wonderland"]
 red_common = ["Alewife","Davis","Porter","Harvard","Central","Kendall/MIT","Charles/MGH",
               "Park Street","Downtown Crossing","South Station","Broadway","Andrew","JFK/UMass"]
 red_ashmont = ["Savin Hill","Fields Corner","Shawmut","Ashmont"]
@@ -325,8 +326,123 @@ green_cc = ["Cleveland Circle","Englewood Avenue","Dean Road","Tappan Street","W
             "Fairbanks Street","Brandon Hall","Summit Avenue","Coolidge Corner","Saint Paul Street (C)",
             "Kent Street","Hawes Street","Saint Mary's Street"]
 green_bcd = ["Kenmore","Hynes Convention Center"]
+terminal_stations = ["Alewife", "Ashmont", "Braintree", "Forest Hills", "Oak Grove", "Wonderland", 
+                     "Bowdoin", "Heath Street", "Boston College", "Riverside", "Cleveland Circle",
+                      "Lechmere"]
+
+real_schedule_adj_mat = {}
+max_blue_trains = 15
+max_green_trains = 99
+max_red_trains = 34
+max_orange_trains = 23
+t = 0
+total_trains_along_each_edge = pd.DataFrame(0, columns=MBTA_SUBWAY_STATIONS, index=MBTA_SUBWAY_STATIONS)
+real_schedule_adj_mat = {"Orange" : {}, "Red" : {}, "Green" : {}, "Blue" : {}}
+d = {}
+for s in orange_stations:
+  d[s] = 1
+real_schedule_adj_mat["Orange"] = d
+d = {}
+for s in blue_stations:
+  d[s] = 1
+real_schedule_adj_mat["Blue"] = d
+d = {}
+for s in green_common+green_bc+green_cc+green_heath+green_riverside+green_bcd:
+  d[s] = 1
+real_schedule_adj_mat["Green"] = d
+d = {}
+for s in red_common+red_braintree+red_ashmont:
+  d[s] = 1
+real_schedule_adj_mat["Red"] = d
+
+real_schedule_adj_mat["Red"]["Alewife"] += 4
+real_schedule_adj_mat["Red"]["Ashmont"] += 4
+real_schedule_adj_mat["Red"]["Braintree"] += 4
+real_schedule_adj_mat["Orange"]["Oak Grove"] += 2
+real_schedule_adj_mat["Orange"]["Forest Hills"] += 1
+real_schedule_adj_mat["Blue"]["Bowdoin"] += 2
+real_schedule_adj_mat["Blue"]["Wonderland"] += 1
+real_schedule_adj_mat["Green"]["Riverside"] += 7
+real_schedule_adj_mat["Green"]["Cleveland Circle"] += 6
+real_schedule_adj_mat["Green"]["Boston College"] += 7
+real_schedule_adj_mat["Green"]["Heath Street"] += 7
+real_schedule_adj_mat["Green"]["Lechmere"] += 7
+
+'''
+for node in terminal_stations:
+  adj_mat_df[stop_name_to_id(node)][stop_name_to_id(node)] = 1
+'''
+
+def out_edges_of_stop(name):
+  neighs = adj_mat_df.columns[adj_mat_df[stop_name_to_id(name)].to_numpy().nonzero()[0]]
+  return [stop_id_to_name(neigh) for neigh in neighs]
 
 
+while t < 180:
+  if t % 9 == 0:
+    # move red line trains
+    pass
+  if t % 5 == 0:
+    # move blue line trains
+    update = {}
+    for node in blue_stations:
+      #print("Currently", node, "has", real_schedule_adj_mat[node], "trains")
+      all_outs = out_edges_of_stop(node)
+      all_outs = [node for node in all_outs if node in blue_stations]
+      #print("It is connected to", all_outs)
+      outs = random.sample(all_outs, k=min(real_schedule_adj_mat["Blue"][node], len(all_outs)))
+      for i in range(len(outs)):
+        #print("Sending 1 train from", node, "to", outs[i])
+        update[outs[i]] = 1 if outs[i] not in update else update[outs[i]] + 1
+        update[node] = -1 if node not in update else update[node] - 1
+        total_trains_along_each_edge[outs[i]][node] += 1
+      if real_schedule_adj_mat["Blue"][node] > len(outs):
+        # Kept some at station, i.e. self-loop
+        # Don't put in adjacency matrix so we don't CHOOSE to keep trains we could send
+        #print("kept", real_schedule_adj_mat[node] - len(all_outs), "trains at", node)
+        total_trains_along_each_edge[node][node] += real_schedule_adj_mat["Blue"][node] - len(outs)
+    for node in update:
+      real_schedule_adj_mat["Blue"][node] += update[node]
+      if real_schedule_adj_mat["Blue"][node] > len(out_edges_of_stop(node)):
+        assert node in terminal_stations, \
+              "Trying to keep %d trains at %s but it isn't a terminal station" % (real_schedule_adj_mat["Blue"][node], node)
+  if t % 6 == 0:
+    # move orange line trains
+    update = {}
+    for node in orange_stations:
+      #print("Currently", node, "has", real_schedule_adj_mat["Orange"][node], "trains")
+      all_outs = out_edges_of_stop(node)
+      all_outs = [node for node in all_outs if node in orange_stations]
+      outs = random.sample(all_outs, k=min(real_schedule_adj_mat["Orange"][node], len(all_outs)))
+      for i in range(len(outs)):
+        #print("Sending 1 train from", node, "to", outs[i])
+        update[outs[i]] = 1 if outs[i] not in update else update[outs[i]] + 1
+        update[node] = -1 if node not in update else update[node] - 1
+        total_trains_along_each_edge[outs[i]][node] += 1
+      if real_schedule_adj_mat["Orange"][node] > len(outs):
+        # Kept some at station, i.e. self-loop
+        # Don't put in adjacency matrix so we don't CHOOSE to keep trains we could send
+        assert node in terminal_stations, "Node %s isn't a terminal station" % node
+        #print("kept", real_schedule_adj_mat["Orange"][node] - len(outs), "trains at", node)
+        total_trains_along_each_edge[node][node] += real_schedule_adj_mat["Orange"][node] - len(outs)
+    for node in update:
+      real_schedule_adj_mat["Orange"][node] += update[node]
+    # move D line trains
+    # move B line trains
+  if t % 7 == 0:
+    pass
+    # move C line trains
+    # move E line trains
+  t += 1
+
+total = 0
+for node in orange_stations:
+  total += real_schedule_adj_mat["Orange"][node]
+assert total == max_orange_trains
+total = 0
+for node in blue_stations:
+  total += real_schedule_adj_mat["Blue"][node]
+assert total == max_blue_trains
 quit()
 def opt_setup(M,pi,N=N,zeta=1):
     n = M.shape[0]

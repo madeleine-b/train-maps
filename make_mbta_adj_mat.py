@@ -11,6 +11,9 @@ from scipy.optimize import lsq_linear
 import networkx as nx 
 import matplotlib.pyplot as plt
 
+# Hand-counted the rolling stock 
+TOTAL_MBTA_TRAINS = 171
+
 MBTA_SUBWAY_STATIONS = set("Alewife, Andrew, Ashmont, Braintree, Broadway, Central, Charles/MGH, Davis,"\
                        " Downtown Crossing, Fields Corner, Harvard, JFK/UMass, Kendall/MIT, North Quincy,"\
                        " Park Street, Porter, Quincy Adams, Quincy Center, Savin Hill, Shawmut, South Station,"\
@@ -281,8 +284,8 @@ total_riders = 0
 # Let's pick Fall 2019 PM_PEAK data
 line_data = pd.read_csv("mbta-data/MBTA data.csv")
 fall_2019_line_data = line_data.loc[(line_data["season"] == "Fall 2019") & (line_data["time_period_name"] == "PM_PEAK")]
-N = 300
-pi = create_pi(fall_2019_line_data, N)
+
+pi = create_pi(fall_2019_line_data, TOTAL_MBTA_TRAINS)
 
 adj_mat_df = generate_adj_matrix(write_to_file=False)
 

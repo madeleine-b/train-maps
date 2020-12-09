@@ -16,6 +16,7 @@ pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 np.set_printoptions(threshold=np.inf)
 
+random.seed(a=400)
 
 # Hand-counted the rolling stock 
 TOTAL_MBTA_TRAINS = 171
@@ -369,6 +370,23 @@ def get_current_station_trains(adj_mat):
                      else adj_mat["Blue"][s] + current_trains[s]
   return np.array([current_trains[stop_id_to_name(s)] for s in adj_mat_df_cols])
 
+def out_edges_of_stop(name):
+  neighs = adj_mat_df.columns[adj_mat_df[stop_name_to_id(name)].to_numpy().nonzero()[0]]
+  return [stop_id_to_name(neigh) for neigh in neighs]
+
+# Returns True if sending a train to each node in |outs|
+# and applying |update| would result in a station trying to hold more
+# trains than tracks it has (which we assume to be the number of
+# neighbors unless it's a terminal station)
+def invalid_update(outs, update, current_adj_mat):
+  for node in outs:
+    if node in update and \
+       node not in terminal_stations and \
+      (current_adj_mat[node] + update[node] + 1) > len(out_edges_of_stop(node)):
+      return True
+  return False
+
+
 real_schedule_adj_mat = {}
 max_blue_trains = 15
 max_green_trains = 99
@@ -415,22 +433,6 @@ real_schedule_adj_mat["Red"] = d
 p_initial = get_current_station_trains(real_schedule_adj_mat) / TOTAL_MBTA_TRAINS
 print("Initial distribution at stations:", p_initial)
 assert np.allclose(np.sum(p_initial), 1), "Initial distribution is not a probability distribution"
-
-def out_edges_of_stop(name):
-  neighs = adj_mat_df.columns[adj_mat_df[stop_name_to_id(name)].to_numpy().nonzero()[0]]
-  return [stop_id_to_name(neigh) for neigh in neighs]
-
-# Returns True if sending a train to each node in |outs|
-# and applying |update| would result in a station trying to hold more
-# trains than tracks it has (which we assume to be the number of
-# neighbors unless it's a terminal station)
-def invalid_update(outs, update, current_adj_mat):
-  for node in outs:
-    if node in update and \
-       node not in terminal_stations and \
-      (current_adj_mat[node] + update[node] + 1) > len(out_edges_of_stop(node)):
-      return True
-  return False
 
 while t < 180:
   if t % 9 == 0:
@@ -638,10 +640,15 @@ for node in green_stations:
   total += real_schedule_adj_mat["Green"][node]
 assert total == max_green_trains
 print("Used green line escape valve %d times" % valve_count)
-#print(total_trains_along_each_edge.to_numpy() / 180)
+
 with open("total_trains_along_each_edge.csv", "w") as f:
   total_trains_along_each_edge.to_csv(f)
 
+train_count_snapshots = train_count_snapshots.to_numpy() / TOTAL_MBTA_TRAINS
+norm_from_pi = np.linalg.norm(train_count_snapshots - pi, axis=1)
+
+plt.plot(range(180), norm_from_pi / 200, marker=".")
+plt.show()
 quit()
 def opt_setup(M,pi,N=N,zeta=1):
     n = M.shape[0]

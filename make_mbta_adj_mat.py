@@ -7,9 +7,15 @@ import time
 import random
 import itertools
 from scipy.optimize import lsq_linear
+from math import floor, ceil
 
 import networkx as nx 
 import matplotlib.pyplot as plt
+
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+np.set_printoptions(threshold=np.inf)
+
 
 # Hand-counted the rolling stock 
 TOTAL_MBTA_TRAINS = 171
@@ -351,37 +357,39 @@ max_green_trains = 99
 max_red_trains = 34
 max_orange_trains = 23
 t = 0
+valve_count = 0
 total_trains_along_each_edge = pd.DataFrame(0, columns=MBTA_SUBWAY_STATIONS, index=MBTA_SUBWAY_STATIONS)
 real_schedule_adj_mat = {"Orange" : {}, "Red" : {}, "Green" : {}, "Blue" : {}}
+
 d = {}
 for s in orange_stations:
-  d[s] = 1
+  d[s] = max_orange_trains // len(orange_stations)
+d["Forest Hills"] += floor((max_orange_trains % len(orange_stations)) / 2)
+d["Oak Grove"] += ceil((max_orange_trains % len(orange_stations)) / 2)
 real_schedule_adj_mat["Orange"] = d
+
 d = {}
 for s in blue_stations:
-  d[s] = 1
+  d[s] = max_blue_trains // len(blue_stations)
+d["Wonderland"] += floor((max_blue_trains % len(blue_stations)) / 2)
+d["Bowdoin"] += ceil((max_blue_trains % len(blue_stations)) / 2)
 real_schedule_adj_mat["Blue"] = d
+
 d = {}
 for s in green_stations:
-  d[s] = 1
+  d[s] = max_green_trains // len(green_stations)
+stations_with_second_train = random.sample(green_stations, k=(max_green_trains % len(green_stations)))
+for s in stations_with_second_train:
+  d[s] += 1
 real_schedule_adj_mat["Green"] = d
+
 d = {}
 for s in red_stations:
-  d[s] = 1
+  d[s] = max_red_trains // len(red_stations)
+stations_with_second_train = random.sample(red_stations, k=(max_red_trains % len(red_stations)))
+for s in stations_with_second_train:
+  d[s] += 1
 real_schedule_adj_mat["Red"] = d
-
-real_schedule_adj_mat["Red"]["Alewife"] += 4
-real_schedule_adj_mat["Red"]["Ashmont"] += 4
-real_schedule_adj_mat["Red"]["Braintree"] += 4
-real_schedule_adj_mat["Orange"]["Oak Grove"] += 2
-real_schedule_adj_mat["Orange"]["Forest Hills"] += 1
-real_schedule_adj_mat["Blue"]["Bowdoin"] += 2
-real_schedule_adj_mat["Blue"]["Wonderland"] += 1
-real_schedule_adj_mat["Green"]["Riverside"] += 7
-real_schedule_adj_mat["Green"]["Cleveland Circle"] += 6
-real_schedule_adj_mat["Green"]["Boston College"] += 6
-real_schedule_adj_mat["Green"]["Heath Street"] += 7
-real_schedule_adj_mat["Green"]["Lechmere"] += 7
 
 def out_edges_of_stop(name):
   neighs = adj_mat_df.columns[adj_mat_df[stop_name_to_id(name)].to_numpy().nonzero()[0]]
@@ -415,11 +423,12 @@ while t < 180:
         # Kept some at station, i.e. self-loop
         # Don't put in adjacency matrix so we don't CHOOSE to keep trains we could send
         total_trains_along_each_edge[node][node] += real_schedule_adj_mat["Red"][node] - len(outs)
+        if real_schedule_adj_mat["Red"][node] > len(out_edges_of_stop(node)):
+          assert node in terminal_stations, \
+                "Trying to keep %d trains at %s but it isn't a terminal station" % (real_schedule_adj_mat["Red"][node], node)
     for node in update:
       real_schedule_adj_mat["Red"][node] += update[node]
-      if real_schedule_adj_mat["Red"][node] > len(out_edges_of_stop(node)):
-        assert node in terminal_stations, \
-              "Trying to keep %d trains at %s but it isn't a terminal station" % (real_schedule_adj_mat["Red"][node], node)
+      
   if t % 5 == 0:
     # move blue line trains
     update = {}
@@ -435,21 +444,20 @@ while t < 180:
         # Kept some at station, i.e. self-loop
         # Don't put in adjacency matrix so we don't CHOOSE to keep trains we could send
         total_trains_along_each_edge[node][node] += real_schedule_adj_mat["Blue"][node] - len(outs)
+        if real_schedule_adj_mat["Blue"][node] > len(out_edges_of_stop(node)):
+          assert node in terminal_stations, \
+                "Trying to keep %d trains at %s but it isn't a terminal station" % (real_schedule_adj_mat["Blue"][node], node)
     for node in update:
       real_schedule_adj_mat["Blue"][node] += update[node]
-      if real_schedule_adj_mat["Blue"][node] > len(out_edges_of_stop(node)):
-        assert node in terminal_stations, \
-              "Trying to keep %d trains at %s but it isn't a terminal station" % (real_schedule_adj_mat["Blue"][node], node)
+      
   if t % 6 == 0:
     # move orange line trains
     update = {}
     for node in orange_stations:
-      #print("Currently", node, "has", real_schedule_adj_mat["Orange"][node], "trains")
       all_outs = out_edges_of_stop(node)
       all_outs = [node for node in all_outs if node in orange_stations]
       outs = random.sample(all_outs, k=min(real_schedule_adj_mat["Orange"][node], len(all_outs)))
       for i in range(len(outs)):
-        #print("Sending 1 train from", node, "to", outs[i])
         update[outs[i]] = 1 if outs[i] not in update else update[outs[i]] + 1
         update[node] = -1 if node not in update else update[node] - 1
         total_trains_along_each_edge[outs[i]][node] += 1
@@ -457,7 +465,6 @@ while t < 180:
         # Kept some at station, i.e. self-loop
         # Don't put in adjacency matrix so we don't CHOOSE to keep trains we could send
         assert node in terminal_stations, "Node %s isn't a terminal station" % node
-        #print("kept", real_schedule_adj_mat["Orange"][node] - len(outs), "trains at", node)
         total_trains_along_each_edge[node][node] += real_schedule_adj_mat["Orange"][node] - len(outs)
     for node in update:
       real_schedule_adj_mat["Orange"][node] += update[node]
@@ -483,6 +490,7 @@ while t < 180:
           total_trains_along_each_edge[outs[i]][node] += 1
       for node in update:
         real_schedule_adj_mat["Green"][node] += update[node]
+      for node in update:
         if real_schedule_adj_mat["Green"][node] > len(out_edges_of_stop(node)):
           if node not in terminal_stations:
             # The Green line is weird. I think this is close to what the MBTA does—sometimes they just
@@ -491,10 +499,16 @@ while t < 180:
             extra_trains = real_schedule_adj_mat["Green"][node] - len(out_edges_of_stop(node))
             real_schedule_adj_mat["Green"][node] = len(out_edges_of_stop(node))
             real_schedule_adj_mat["Green"][random_terminal] += extra_trains
+            valve_count += 1
           else:
             # Kept some at station, i.e. self-loop
-            # Don't put in adjacency matrix so we don't CHOOSE to keep trains we could send
-            total_trains_along_each_edge[node][node] += real_schedule_adj_mat["Green"][node] - len(out_edges_of_stop(node))
+            # We don't add the self-loop to the adjacency matrix so as to never keep trains we could send
+            if node not in update or update[node] <= 0:
+              # if we had a net outflow of trains, we kept our current number
+              total_trains_along_each_edge[node][node] += real_schedule_adj_mat["Green"][node] 
+            else:
+              # we kept our current number minus the number we received
+              total_trains_along_each_edge[node][node] += real_schedule_adj_mat["Green"][node] - update[node]
     
   if t % 7 == 0:
     # move C and E line trains
@@ -519,6 +533,7 @@ while t < 180:
           total_trains_along_each_edge[outs[i]][node] += 1
       for node in update:
         real_schedule_adj_mat["Green"][node] += update[node]
+      for node in update:
         if real_schedule_adj_mat["Green"][node] > len(out_edges_of_stop(node)):
           if node not in terminal_stations:
             # The Green line is weird. I think this is close to what the MBTA does—sometimes they just
@@ -527,10 +542,16 @@ while t < 180:
             extra_trains = real_schedule_adj_mat["Green"][node] - len(out_edges_of_stop(node))
             real_schedule_adj_mat["Green"][node] = len(out_edges_of_stop(node))
             real_schedule_adj_mat["Green"][random_terminal] += extra_trains
+            valve_count += 1
           else:
             # Kept some at station, i.e. self-loop
-            # Don't put in adjacency matrix so we don't CHOOSE to keep trains we could send
-            total_trains_along_each_edge[node][node] += real_schedule_adj_mat["Green"][node] - len(out_edges_of_stop(node))
+            # We don't add the self-loop to the adjacency matrix so as to never keep trains we could send
+            if node not in update or update[node] <= 0:
+              # if we had a net outflow of trains, we kept our current number
+              total_trains_along_each_edge[node][node] += real_schedule_adj_mat["Green"][node] 
+            else:
+              # we kept our current number minus the number we received
+              total_trains_along_each_edge[node][node] += real_schedule_adj_mat["Green"][node] - update[node]
 
   if t % 7 == 0 and t % 6 == 0:
     # simultaneously moving all green line trains
@@ -552,6 +573,7 @@ while t < 180:
         total_trains_along_each_edge[outs[i]][node] += 1
     for node in update:
         real_schedule_adj_mat["Green"][node] += update[node]
+    for node in update:
         if real_schedule_adj_mat["Green"][node] > len(out_edges_of_stop(node)):
           if node not in terminal_stations:
             # The Green line is weird. I think this is close to what the MBTA does—sometimes they just
@@ -560,10 +582,16 @@ while t < 180:
             extra_trains = real_schedule_adj_mat["Green"][node] - len(out_edges_of_stop(node))
             real_schedule_adj_mat["Green"][node] = len(out_edges_of_stop(node))
             real_schedule_adj_mat["Green"][random_terminal] += extra_trains
+            valve_count += 1
           else:
             # Kept some at station, i.e. self-loop
-            # Don't put in adjacency matrix so we don't CHOOSE to keep trains we could send
-            total_trains_along_each_edge[node][node] += real_schedule_adj_mat["Green"][node] - len(out_edges_of_stop(node))
+            # We don't add the self-loop to the adjacency matrix so as to never keep trains we could send
+            if node not in update or update[node] <= 0:
+              # if we had a net outflow of trains, we kept our current number
+              total_trains_along_each_edge[node][node] += real_schedule_adj_mat["Green"][node] 
+            else:
+              # we kept our current number minus the number we received
+              total_trains_along_each_edge[node][node] += real_schedule_adj_mat["Green"][node] - update[node]
   t += 1
 
 total = 0
@@ -582,6 +610,10 @@ total = 0
 for node in green_stations:
   total += real_schedule_adj_mat["Green"][node]
 assert total == max_green_trains
+print("Used green line escape valve %d times" % valve_count)
+#print(total_trains_along_each_edge.to_numpy() / 180)
+with open("total_trains_along_each_edge.csv", "w") as f:
+  total_trains_along_each_edge.to_csv(f)
 
 quit()
 def opt_setup(M,pi,N=N,zeta=1):

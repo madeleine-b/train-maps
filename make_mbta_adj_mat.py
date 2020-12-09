@@ -351,15 +351,36 @@ terminal_stations = ["Alewife", "Ashmont", "Braintree", "Forest Hills", "Oak Gro
 red_stations = list(set(red_common + red_braintree + red_ashmont))
 green_stations = list(set(green_b + green_c + green_e + green_d))
 
+def get_current_station_trains(adj_mat):
+  current_trains = {}
+  for s_id in adj_mat_df_cols:
+    s = stop_id_to_name(s_id)
+    if s in red_stations:
+      current_trains[s] = adj_mat["Red"][s] if s not in current_trains \
+                     else adj_mat["Red"][s] + current_trains[s]
+    if s in green_stations:
+      current_trains[s] = adj_mat["Green"][s] if s not in current_trains \
+                     else adj_mat["Green"][s] + current_trains[s]
+    if s in orange_stations:
+      current_trains[s] = adj_mat["Orange"][s] if s not in current_trains \
+                     else adj_mat["Orange"][s] + current_trains[s]
+    if s in blue_stations:
+      current_trains[s] = adj_mat["Blue"][s] if s not in current_trains \
+                     else adj_mat["Blue"][s] + current_trains[s]
+  return np.array([current_trains[stop_id_to_name(s)] for s in adj_mat_df_cols])
+
 real_schedule_adj_mat = {}
 max_blue_trains = 15
 max_green_trains = 99
 max_red_trains = 34
 max_orange_trains = 23
+assert (max_blue_trains + max_orange_trains + max_red_trains + max_green_trains) == TOTAL_MBTA_TRAINS
 t = 0
 valve_count = 0
 total_trains_along_each_edge = pd.DataFrame(0, columns=MBTA_SUBWAY_STATIONS, index=MBTA_SUBWAY_STATIONS)
 real_schedule_adj_mat = {"Orange" : {}, "Red" : {}, "Green" : {}, "Blue" : {}}
+# Each row is how the trains are distributed at stations at time t
+train_count_snapshots = pd.DataFrame(0, columns=MBTA_SUBWAY_STATIONS, index=range(180))
 
 d = {}
 for s in orange_stations:
@@ -390,6 +411,10 @@ stations_with_second_train = random.sample(red_stations, k=(max_red_trains % len
 for s in stations_with_second_train:
   d[s] += 1
 real_schedule_adj_mat["Red"] = d
+
+p_initial = get_current_station_trains(real_schedule_adj_mat) / TOTAL_MBTA_TRAINS
+print("Initial distribution at stations:", p_initial)
+assert np.allclose(np.sum(p_initial), 1), "Initial distribution is not a probability distribution"
 
 def out_edges_of_stop(name):
   neighs = adj_mat_df.columns[adj_mat_df[stop_name_to_id(name)].to_numpy().nonzero()[0]]
@@ -592,6 +617,8 @@ while t < 180:
             else:
               # we kept our current number minus the number we received
               total_trains_along_each_edge[node][node] += real_schedule_adj_mat["Green"][node] - update[node]
+  
+  train_count_snapshots.loc[t] = get_current_station_trains(real_schedule_adj_mat)
   t += 1
 
 total = 0

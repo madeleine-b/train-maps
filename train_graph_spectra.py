@@ -33,6 +33,13 @@ def spectra(file):
 	w_pi = max(omegas[1], -omegas[-1])
 	print(w_pi)
 
+
+def perf_metrics():
+	with open("mbta-data/perfmetrics_rail.csv", "r") as f:
+		metrics18_19 = pd.read_csv(f)
+		wait_time_avg = metrics18_19["otp_numerator"].to_numpy().sum() / metrics18_19["otp_denominator"].to_numpy().sum()
+		print("average passenger wait time: ", wait_time_avg)
+
 spectra(mta_file)
 print("--------------------")
 spectra(mbta_file)

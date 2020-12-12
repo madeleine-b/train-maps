@@ -2,11 +2,13 @@ import numpy as np
 import pandas as pd
 import json
 import networkx as nx 
+import matplotlib.pyplot as plt
 
 mta_file = "mta-data/mta_adjacency_mat"
 mbta_file = "mbta-data/mbta_adj_mat"
 
 def spectra(file):
+	print(file)
 	with open(file, "r") as f:
 		adj_mat = pd.read_json(f)
 
@@ -17,6 +19,9 @@ def spectra(file):
 	assert np.all(adj_mat.T == adj_mat), "G is not undirected"
 
 	degree = np.diag(np.sum(adj_mat, axis=1))
+	print("n:", len(G.nodes))
+	print("max degree:", np.max(np.sum(adj_mat, axis=1)))
+	print("min degree:", np.min(np.sum(adj_mat, axis=1)))
 	d_inv = np.linalg.inv(degree)
 	random_walk = np.matmul(adj_mat, d_inv)
 	assert np.allclose(np.sum(random_walk, axis=0), 1), "Random walk isn't stochastic"
@@ -40,6 +45,13 @@ def perf_metrics():
 		wait_time_avg = metrics18_19["otp_numerator"].to_numpy().sum() / metrics18_19["otp_denominator"].to_numpy().sum()
 		print("average passenger wait time: ", wait_time_avg)
 
-spectra(mta_file)
-print("--------------------")
+	x = np.linspace(0, 1, 100)
+	y = np.array([1/(np.log(12.56*456/pt)*0.0012/(0.0063*np.log(456/pt))) for pt in x])
+	plt.plot(x, y)
+	plt.xlabel("Epsilon")
+	plt.ylabel("Ratio of MBTA to MTA mixing time")
+	plt.savefig('mixing_time_ratios.eps', format='eps')
+
 spectra(mbta_file)
+print("--------------------")
+spectra(mta_file)

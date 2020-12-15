@@ -53,11 +53,14 @@ def perf_metrics():
 	mta_mixing_time = lambda var: np.log(5728/var)/0.0063
 	mbta_mixing_time = lambda var: np.log(456/var)/0.0012
 	y = np.array([mbta_mixing_time(pt)/mta_mixing_time(pt) for pt in x])
+	plt.xticks(fontsize=16)
+	plt.yticks(fontsize=16)
 	plt.plot(x, y)
-	plt.xlabel("Epsilon")
-	plt.ylabel("Ratio of MBTA to MTA mixing time")
+	plt.xlabel("Epsilon", fontsize=18)
+	plt.ylabel("Ratio of MBTA to MTA mixing time", fontsize=18)
+	plt.tight_layout()
 	plt.savefig('mixing_time_ratios.eps', format='eps')
-
+	
 spectra(mbta_file)
 print("--------------------")
 spectra(mta_file)
